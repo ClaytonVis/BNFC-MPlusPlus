@@ -16,8 +16,8 @@ newtype AND = AND String deriving (Eq, Ord, Show, Read)
 newtype OR = OR String deriving (Eq, Ord, Show, Read)
 newtype NOT = NOT String deriving (Eq, Ord, Show, Read)
 newtype EQUAL = EQUAL String deriving (Eq, Ord, Show, Read)
-newtype LT = LT String deriving (Eq, Ord, Show, Read)
-newtype GT = GT String deriving (Eq, Ord, Show, Read)
+newtype MyLT = MyLT String deriving (Eq, Ord, Show, Read)
+newtype MyGT = MyGT String deriving (Eq, Ord, Show, Read)
 newtype LE = LE String deriving (Eq, Ord, Show, Read)
 newtype GE = GE String deriving (Eq, Ord, Show, Read)
 newtype ASSIGN = ASSIGN String deriving (Eq, Ord, Show, Read)
@@ -60,175 +60,212 @@ newtype IVAL = IVAL String deriving (Eq, Ord, Show, Read)
 newtype RVAL = RVAL String deriving (Eq, Ord, Show, Read)
 newtype BVAL = BVAL String deriving (Eq, Ord, Show, Read)
 newtype CVAL = CVAL String deriving (Eq, Ord, Show, Read)
-data Program = P1 Block
+data Prog = ProgBlock Block
   deriving (Eq, Ord, Show, Read)
 
-data Block = P2 Declarations Program_Body
+data Block = Block1 Declarations Program_Body
   deriving (Eq, Ord, Show, Read)
 
-data Declarations = P3 Declaration SEMICOLON Declarations | P4
+data Declarations
+    = Declarations1 Declaration SEMICOLON Declarations | Declarations2
   deriving (Eq, Ord, Show, Read)
 
 data Declaration
-    = P5 Var_Declaration | P6 Fun_Declaration | P7 Data_Declaration
+    = DeclarationVar_Declaration Var_Declaration
+    | DeclarationFun_Declaration Fun_Declaration
+    | DeclarationData_Declaration Data_Declaration
   deriving (Eq, Ord, Show, Read)
 
-data Var_Declaration = P8 VAR Var_Specs COLON Type
+data Var_Declaration = Var_Declaration1 VAR Var_Specs COLON Type
   deriving (Eq, Ord, Show, Read)
 
-data Var_Specs = P9 Var_Spec More_Var_Specs
+data Var_Specs = Var_Specs1 Var_Spec More_Var_Specs
   deriving (Eq, Ord, Show, Read)
 
-data More_Var_Specs = P10 COMMA Var_Spec More_Var_Specs | P11
+data More_Var_Specs
+    = More_Var_Specs1 COMMA Var_Spec More_Var_Specs | More_Var_Specs2
   deriving (Eq, Ord, Show, Read)
 
-data Var_Spec = P12 ID Array_Dimensions
+data Var_Spec = Var_Spec1 ID Array_Dimensions
   deriving (Eq, Ord, Show, Read)
 
-data Array_Dimensions = P13 SLPAR Expr SRPAR Array_Dimensions | P14
+data Array_Dimensions
+    = Array_Dimensions1 SLPAR Expr SRPAR Array_Dimensions
+    | Array_Dimensions2
   deriving (Eq, Ord, Show, Read)
 
-data Type = P15 INT | P16 REAL | P17 BOOL | P18 CHAR | P19 ID
+data Type
+    = TypeINT INT
+    | TypeREAL REAL
+    | TypeBOOL BOOL
+    | TypeCHAR CHAR
+    | TypeID ID
   deriving (Eq, Ord, Show, Read)
 
 data Fun_Declaration
-    = P20 FUN ID Param_List COLON Type CLPAR Fun_Block CRPAR
+    = Fun_Declaration1 FUN ID Param_List COLON Type CLPAR Fun_Block CRPAR
   deriving (Eq, Ord, Show, Read)
 
-data Fun_Block = P21 Declarations Fun_Body
+data Fun_Block = Fun_Block1 Declarations Fun_Body
   deriving (Eq, Ord, Show, Read)
 
-data Param_List = P22 LPAR Parameters RPAR
+data Param_List = Param_List1 LPAR Parameters RPAR
   deriving (Eq, Ord, Show, Read)
 
-data Parameters = P23 Basic_Declaration More_Parameters | P24
+data Parameters
+    = Parameters1 Basic_Declaration More_Parameters | Parameters2
   deriving (Eq, Ord, Show, Read)
 
 data More_Parameters
-    = P25 COMMA Basic_Declaration More_Parameters | P26
+    = More_Parameters1 COMMA Basic_Declaration More_Parameters
+    | More_Parameters2
   deriving (Eq, Ord, Show, Read)
 
-data Basic_Declaration = P27 ID Basic_Array_Dimensions COLON Type
+data Basic_Declaration
+    = Basic_Declaration1 ID Basic_Array_Dimensions COLON Type
   deriving (Eq, Ord, Show, Read)
 
 data Basic_Array_Dimensions
-    = P28 SLPAR SRPAR Basic_Array_Dimensions | P29
+    = Basic_Array_Dimensions1 SLPAR SRPAR Basic_Array_Dimensions
+    | Basic_Array_Dimensions2
   deriving (Eq, Ord, Show, Read)
 
-data Data_Declaration = P30 DATA ID EQUAL Cons_Declarations
+data Data_Declaration
+    = Data_Declaration1 DATA ID EQUAL Cons_Declarations
   deriving (Eq, Ord, Show, Read)
 
-data Cons_Declarations = P31 Cons_Decl More_Cons_Decl
+data Cons_Declarations
+    = Cons_Declarations1 Cons_Decl More_Cons_Decl
   deriving (Eq, Ord, Show, Read)
 
-data More_Cons_Decl = P32 SLASH Cons_Decl More_Cons_Decl | P33
+data More_Cons_Decl
+    = More_Cons_Decl1 SLASH Cons_Decl More_Cons_Decl | More_Cons_Decl2
   deriving (Eq, Ord, Show, Read)
 
-data Cons_Decl = P34 CID OF Type_List | P35 CID
+data Cons_Decl = Cons_Decl1 CID OF Type_List | Cons_DeclCID CID
   deriving (Eq, Ord, Show, Read)
 
-data Type_List = P36 Type More_Type
+data Type_List = Type_List1 Type More_Type
   deriving (Eq, Ord, Show, Read)
 
-data More_Type = P37 MUL Type More_Type | P38
+data More_Type = More_Type1 MUL Type More_Type | More_Type2
   deriving (Eq, Ord, Show, Read)
 
-data Program_Body = P39 BEGIN Prog_Stmts END | P40 Prog_Stmts
+data Program_Body
+    = Program_Body1 BEGIN Prog_Stmts END
+    | Program_BodyProg_Stmts Prog_Stmts
   deriving (Eq, Ord, Show, Read)
 
 data Fun_Body
-    = P41 BEGIN Prog_Stmts RETURN Expr SEMICOLON END
-    | P42 Prog_Stmts RETURN Expr SEMICOLON
+    = Fun_Body1 BEGIN Prog_Stmts RETURN Expr SEMICOLON END
+    | Fun_Body2 Prog_Stmts RETURN Expr SEMICOLON
   deriving (Eq, Ord, Show, Read)
 
-data Prog_Stmts = P43 Prog_Stmt SEMICOLON Prog_Stmts | P44
+data Prog_Stmts
+    = Prog_Stmts1 Prog_Stmt SEMICOLON Prog_Stmts | Prog_Stmts2
   deriving (Eq, Ord, Show, Read)
 
 data Prog_Stmt
-    = P45 IF Expr THEN Prog_Stmt ELSE Prog_Stmt
-    | P46 WHILE Expr DO Prog_Stmt
-    | P47 READ Location
-    | P48 Location ASSIGN Expr
-    | P49 PRINT Expr
-    | P50 CLPAR Block CRPAR
-    | P51 CASE Expr OF CLPAR Case_List CRPAR
+    = Prog_Stmt1 IF Expr THEN Prog_Stmt ELSE Prog_Stmt
+    | Prog_Stmt2 WHILE Expr DO Prog_Stmt
+    | Prog_Stmt3 READ Location
+    | Prog_Stmt4 Location ASSIGN Expr
+    | Prog_Stmt5 PRINT Expr
+    | Prog_Stmt6 CLPAR Block CRPAR
+    | Prog_Stmt7 CASE Expr OF CLPAR Case_List CRPAR
   deriving (Eq, Ord, Show, Read)
 
-data Location = P52 ID Array_Dimensions
+data Location = Location1 ID Array_Dimensions
   deriving (Eq, Ord, Show, Read)
 
-data Case_List = P53 Case More_Case
+data Case_List = Case_List1 Case More_Case
   deriving (Eq, Ord, Show, Read)
 
-data More_Case = P54 SLASH Case More_Case | P55
+data More_Case = More_Case1 SLASH Case More_Case | More_Case2
   deriving (Eq, Ord, Show, Read)
 
-data Case = P56 CID Var_List ARROW Prog_Stmt
+data Case = Case1 CID Var_List ARROW Prog_Stmt
   deriving (Eq, Ord, Show, Read)
 
-data Var_List = P57 LPAR Var_List' RPAR | P58
+data Var_List = Var_List1 LPAR Var_ListP RPAR | Var_List2
   deriving (Eq, Ord, Show, Read)
 
-data Var_List' = P59 ID More_Var_List'
+data Var_ListP = Var_ListP1 ID More_Var_ListP
   deriving (Eq, Ord, Show, Read)
 
-data More_Var_List' = P60 COMMA ID More_Var_List' | P61
+data More_Var_ListP
+    = More_Var_ListP1 COMMA ID More_Var_ListP | More_Var_ListP2
   deriving (Eq, Ord, Show, Read)
 
-data Expr = P62 Expr OR BInt_Term | P63 BInt_Term
+data Expr = Expr1 Expr OR BInt_Term | ExprBInt_Term BInt_Term
   deriving (Eq, Ord, Show, Read)
 
-data BInt_Term = P64 BInt_Term AND BInt_Factor | P65 BInt_Factor
+data BInt_Term
+    = BInt_Term1 BInt_Term AND BInt_Factor
+    | BInt_TermBInt_Factor BInt_Factor
   deriving (Eq, Ord, Show, Read)
 
 data BInt_Factor
-    = P66 NOT BInt_Factor
-    | P67 Int_Expr Compare_Op Int_Expr
-    | P68 Int_Expr
+    = BInt_Factor1 NOT BInt_Factor
+    | BInt_Factor2 Int_Expr Compare_Op Int_Expr
+    | BInt_FactorInt_Expr Int_Expr
   deriving (Eq, Ord, Show, Read)
 
-data Compare_Op = P69 EQUAL | P70 LT | P71 GT | P72 LE | P73 GT
+data Compare_Op
+    = Compare_OpEQUAL EQUAL
+    | Compare_OpMyLT MyLT
+    | Compare_OpMyGT MyGT
+    | Compare_OpLE LE
+    | Compare_OpGE GE
   deriving (Eq, Ord, Show, Read)
 
-data Int_Expr = P74 Int_Expr Addop Int_Term | P75 Int_Term
+data Int_Expr
+    = Int_Expr1 Int_Expr Addop Int_Term | Int_ExprInt_Term Int_Term
   deriving (Eq, Ord, Show, Read)
 
-data Addop = P76 ADD | P77 SUB
+data Addop = AddopADD ADD | AddopSUB SUB
   deriving (Eq, Ord, Show, Read)
 
-data Int_Term = P78 Int_Term Mulop Int_Factor | P79 Int_Factor
+data Int_Term
+    = Int_Term1 Int_Term Mulop Int_Factor
+    | Int_TermInt_Factor Int_Factor
   deriving (Eq, Ord, Show, Read)
 
-data Mulop = P80 MUL | P81 DIV
+data Mulop = MulopMUL MUL | MulopDIV DIV
   deriving (Eq, Ord, Show, Read)
 
 data Int_Factor
-    = P82 LPAR Expr RPAR
-    | P83 SIZE LPAR ID Basic_Array_Dimensions RPAR
-    | P84 FLOAT LPAR Expr RPAR
-    | P85 FLOOR LPAR Expr RPAR
-    | P86 CEIL LPAR Expr RPAR
-    | P87 ID Modifier_List
-    | P88 CID Cons_Argument_List
-    | P89 IVAL
-    | P90 RVAL
-    | P91 BVAL
-    | P92 CVAL
-    | P93 SUB Int_Factor
+    = Int_Factor1 LPAR Expr RPAR
+    | Int_Factor2 SIZE LPAR ID Basic_Array_Dimensions RPAR
+    | Int_Factor3 FLOAT LPAR Expr RPAR
+    | Int_Factor4 FLOOR LPAR Expr RPAR
+    | Int_Factor5 CEIL LPAR Expr RPAR
+    | Int_Factor6 ID Modifier_List
+    | Int_Factor7 CID Cons_Argument_List
+    | Int_FactorIVAL IVAL
+    | Int_FactorRVAL RVAL
+    | Int_FactorBVAL BVAL
+    | Int_FactorCVAL CVAL
+    | Int_Factor8 SUB Int_Factor
   deriving (Eq, Ord, Show, Read)
 
-data Modifier_List = P94 Fun_Argument_List | P95 Array_Dimensions
+data Modifier_List
+    = Modifier_ListFun_Argument_List Fun_Argument_List
+    | Modifier_ListArray_Dimensions Array_Dimensions
   deriving (Eq, Ord, Show, Read)
 
-data Fun_Argument_List = P96 LPAR Arguments RPAR
+data Fun_Argument_List = Fun_Argument_List1 LPAR Arguments RPAR
   deriving (Eq, Ord, Show, Read)
 
-data Cons_Argument_List = P97 Fun_Argument_List | P98
+data Cons_Argument_List
+    = Cons_Argument_ListFun_Argument_List Fun_Argument_List
+    | Cons_Argument_List1
   deriving (Eq, Ord, Show, Read)
 
-data Arguments = P99 Expr More_Arguments | P100
+data Arguments = Arguments1 Expr More_Arguments | Arguments2
   deriving (Eq, Ord, Show, Read)
 
-data More_Arguments = P101 COMMA Expr More_Arguments | P102
+data More_Arguments
+    = More_Arguments1 COMMA Expr More_Arguments | More_Arguments2
   deriving (Eq, Ord, Show, Read)
 

@@ -36,12 +36,12 @@ transNOT x = case x of
 transEQUAL :: EQUAL -> Result
 transEQUAL x = case x of
   EQUAL string -> failure x
-transLT :: LT -> Result
-transLT x = case x of
-  LT string -> failure x
-transGT :: GT -> Result
-transGT x = case x of
-  GT string -> failure x
+transMyLT :: MyLT -> Result
+transMyLT x = case x of
+  MyLT string -> failure x
+transMyGT :: MyGT -> Result
+transMyGT x = case x of
+  MyGT string -> failure x
 transLE :: LE -> Result
 transLE x = case x of
   LE string -> failure x
@@ -168,202 +168,202 @@ transBVAL x = case x of
 transCVAL :: CVAL -> Result
 transCVAL x = case x of
   CVAL string -> failure x
-transProgram :: Program -> Result
-transProgram x = case x of
-  P1 block -> failure x
+transProg :: Prog -> Result
+transProg x = case x of
+  ProgBlock block -> failure x
 transBlock :: Block -> Result
 transBlock x = case x of
-  P2 declarations programbody -> failure x
+  Block1 declarations programbody -> failure x
 transDeclarations :: Declarations -> Result
 transDeclarations x = case x of
-  P3 declaration semicolon declarations -> failure x
-  P4 -> failure x
+  Declarations1 declaration semicolon declarations -> failure x
+  Declarations2 -> failure x
 transDeclaration :: Declaration -> Result
 transDeclaration x = case x of
-  P5 vardeclaration -> failure x
-  P6 fundeclaration -> failure x
-  P7 datadeclaration -> failure x
+  DeclarationVar_Declaration vardeclaration -> failure x
+  DeclarationFun_Declaration fundeclaration -> failure x
+  DeclarationData_Declaration datadeclaration -> failure x
 transVar_Declaration :: Var_Declaration -> Result
 transVar_Declaration x = case x of
-  P8 var varspecs colon type_ -> failure x
+  Var_Declaration1 var varspecs colon type_ -> failure x
 transVar_Specs :: Var_Specs -> Result
 transVar_Specs x = case x of
-  P9 varspec morevarspecs -> failure x
+  Var_Specs1 varspec morevarspecs -> failure x
 transMore_Var_Specs :: More_Var_Specs -> Result
 transMore_Var_Specs x = case x of
-  P10 comma varspec morevarspecs -> failure x
-  P11 -> failure x
+  More_Var_Specs1 comma varspec morevarspecs -> failure x
+  More_Var_Specs2 -> failure x
 transVar_Spec :: Var_Spec -> Result
 transVar_Spec x = case x of
-  P12 id arraydimensions -> failure x
+  Var_Spec1 id arraydimensions -> failure x
 transArray_Dimensions :: Array_Dimensions -> Result
 transArray_Dimensions x = case x of
-  P13 slpar expr srpar arraydimensions -> failure x
-  P14 -> failure x
+  Array_Dimensions1 slpar expr srpar arraydimensions -> failure x
+  Array_Dimensions2 -> failure x
 transType :: Type -> Result
 transType x = case x of
-  P15 int -> failure x
-  P16 real -> failure x
-  P17 bool -> failure x
-  P18 char -> failure x
-  P19 id -> failure x
+  TypeINT int -> failure x
+  TypeREAL real -> failure x
+  TypeBOOL bool -> failure x
+  TypeCHAR char -> failure x
+  TypeID id -> failure x
 transFun_Declaration :: Fun_Declaration -> Result
 transFun_Declaration x = case x of
-  P20 fun id paramlist colon type_ clpar funblock crpar -> failure x
+  Fun_Declaration1 fun id paramlist colon type_ clpar funblock crpar -> failure x
 transFun_Block :: Fun_Block -> Result
 transFun_Block x = case x of
-  P21 declarations funbody -> failure x
+  Fun_Block1 declarations funbody -> failure x
 transParam_List :: Param_List -> Result
 transParam_List x = case x of
-  P22 lpar parameters rpar -> failure x
+  Param_List1 lpar parameters rpar -> failure x
 transParameters :: Parameters -> Result
 transParameters x = case x of
-  P23 basicdeclaration moreparameters -> failure x
-  P24 -> failure x
+  Parameters1 basicdeclaration moreparameters -> failure x
+  Parameters2 -> failure x
 transMore_Parameters :: More_Parameters -> Result
 transMore_Parameters x = case x of
-  P25 comma basicdeclaration moreparameters -> failure x
-  P26 -> failure x
+  More_Parameters1 comma basicdeclaration moreparameters -> failure x
+  More_Parameters2 -> failure x
 transBasic_Declaration :: Basic_Declaration -> Result
 transBasic_Declaration x = case x of
-  P27 id basicarraydimensions colon type_ -> failure x
+  Basic_Declaration1 id basicarraydimensions colon type_ -> failure x
 transBasic_Array_Dimensions :: Basic_Array_Dimensions -> Result
 transBasic_Array_Dimensions x = case x of
-  P28 slpar srpar basicarraydimensions -> failure x
-  P29 -> failure x
+  Basic_Array_Dimensions1 slpar srpar basicarraydimensions -> failure x
+  Basic_Array_Dimensions2 -> failure x
 transData_Declaration :: Data_Declaration -> Result
 transData_Declaration x = case x of
-  P30 data_ id equal consdeclarations -> failure x
+  Data_Declaration1 data_ id equal consdeclarations -> failure x
 transCons_Declarations :: Cons_Declarations -> Result
 transCons_Declarations x = case x of
-  P31 consdecl moreconsdecl -> failure x
+  Cons_Declarations1 consdecl moreconsdecl -> failure x
 transMore_Cons_Decl :: More_Cons_Decl -> Result
 transMore_Cons_Decl x = case x of
-  P32 slash consdecl moreconsdecl -> failure x
-  P33 -> failure x
+  More_Cons_Decl1 slash consdecl moreconsdecl -> failure x
+  More_Cons_Decl2 -> failure x
 transCons_Decl :: Cons_Decl -> Result
 transCons_Decl x = case x of
-  P34 cid of_ typelist -> failure x
-  P35 cid -> failure x
+  Cons_Decl1 cid of_ typelist -> failure x
+  Cons_DeclCID cid -> failure x
 transType_List :: Type_List -> Result
 transType_List x = case x of
-  P36 type_ moretype -> failure x
+  Type_List1 type_ moretype -> failure x
 transMore_Type :: More_Type -> Result
 transMore_Type x = case x of
-  P37 mul type_ moretype -> failure x
-  P38 -> failure x
+  More_Type1 mul type_ moretype -> failure x
+  More_Type2 -> failure x
 transProgram_Body :: Program_Body -> Result
 transProgram_Body x = case x of
-  P39 begin progstmts end -> failure x
-  P40 progstmts -> failure x
+  Program_Body1 begin progstmts end -> failure x
+  Program_BodyProg_Stmts progstmts -> failure x
 transFun_Body :: Fun_Body -> Result
 transFun_Body x = case x of
-  P41 begin progstmts return expr semicolon end -> failure x
-  P42 progstmts return expr semicolon -> failure x
+  Fun_Body1 begin progstmts return expr semicolon end -> failure x
+  Fun_Body2 progstmts return expr semicolon -> failure x
 transProg_Stmts :: Prog_Stmts -> Result
 transProg_Stmts x = case x of
-  P43 progstmt semicolon progstmts -> failure x
-  P44 -> failure x
+  Prog_Stmts1 progstmt semicolon progstmts -> failure x
+  Prog_Stmts2 -> failure x
 transProg_Stmt :: Prog_Stmt -> Result
 transProg_Stmt x = case x of
-  P45 if_ expr then_ progstmt1 else_ progstmt2 -> failure x
-  P46 while expr do_ progstmt -> failure x
-  P47 read location -> failure x
-  P48 location assign expr -> failure x
-  P49 print expr -> failure x
-  P50 clpar block crpar -> failure x
-  P51 case_ expr of_ clpar caselist crpar -> failure x
+  Prog_Stmt1 if_ expr then_ progstmt1 else_ progstmt2 -> failure x
+  Prog_Stmt2 while expr do_ progstmt -> failure x
+  Prog_Stmt3 read location -> failure x
+  Prog_Stmt4 location assign expr -> failure x
+  Prog_Stmt5 print expr -> failure x
+  Prog_Stmt6 clpar block crpar -> failure x
+  Prog_Stmt7 case_ expr of_ clpar caselist crpar -> failure x
 transLocation :: Location -> Result
 transLocation x = case x of
-  P52 id arraydimensions -> failure x
+  Location1 id arraydimensions -> failure x
 transCase_List :: Case_List -> Result
 transCase_List x = case x of
-  P53 case_ morecase -> failure x
+  Case_List1 case_ morecase -> failure x
 transMore_Case :: More_Case -> Result
 transMore_Case x = case x of
-  P54 slash case_ morecase -> failure x
-  P55 -> failure x
+  More_Case1 slash case_ morecase -> failure x
+  More_Case2 -> failure x
 transCase :: Case -> Result
 transCase x = case x of
-  P56 cid varlist arrow progstmt -> failure x
+  Case1 cid varlist arrow progstmt -> failure x
 transVar_List :: Var_List -> Result
 transVar_List x = case x of
-  P57 lpar varlist rpar -> failure x
-  P58 -> failure x
-transVar_List' :: Var_List' -> Result
-transVar_List' x = case x of
-  P59 id morevarlist -> failure x
-transMore_Var_List' :: More_Var_List' -> Result
-transMore_Var_List' x = case x of
-  P60 comma id morevarlist -> failure x
-  P61 -> failure x
+  Var_List1 lpar varlistp rpar -> failure x
+  Var_List2 -> failure x
+transVar_ListP :: Var_ListP -> Result
+transVar_ListP x = case x of
+  Var_ListP1 id morevarlistp -> failure x
+transMore_Var_ListP :: More_Var_ListP -> Result
+transMore_Var_ListP x = case x of
+  More_Var_ListP1 comma id morevarlistp -> failure x
+  More_Var_ListP2 -> failure x
 transExpr :: Expr -> Result
 transExpr x = case x of
-  P62 expr or bintterm -> failure x
-  P63 bintterm -> failure x
+  Expr1 expr or bintterm -> failure x
+  ExprBInt_Term bintterm -> failure x
 transBInt_Term :: BInt_Term -> Result
 transBInt_Term x = case x of
-  P64 bintterm and bintfactor -> failure x
-  P65 bintfactor -> failure x
+  BInt_Term1 bintterm and bintfactor -> failure x
+  BInt_TermBInt_Factor bintfactor -> failure x
 transBInt_Factor :: BInt_Factor -> Result
 transBInt_Factor x = case x of
-  P66 not bintfactor -> failure x
-  P67 intexpr1 compareop intexpr2 -> failure x
-  P68 intexpr -> failure x
+  BInt_Factor1 not bintfactor -> failure x
+  BInt_Factor2 intexpr1 compareop intexpr2 -> failure x
+  BInt_FactorInt_Expr intexpr -> failure x
 transCompare_Op :: Compare_Op -> Result
 transCompare_Op x = case x of
-  P69 equal -> failure x
-  P70 lt -> failure x
-  P71 gt -> failure x
-  P72 le -> failure x
-  P73 gt -> failure x
+  Compare_OpEQUAL equal -> failure x
+  Compare_OpMyLT mylt -> failure x
+  Compare_OpMyGT mygt -> failure x
+  Compare_OpLE le -> failure x
+  Compare_OpGE ge -> failure x
 transInt_Expr :: Int_Expr -> Result
 transInt_Expr x = case x of
-  P74 intexpr addop intterm -> failure x
-  P75 intterm -> failure x
+  Int_Expr1 intexpr addop intterm -> failure x
+  Int_ExprInt_Term intterm -> failure x
 transAddop :: Addop -> Result
 transAddop x = case x of
-  P76 add -> failure x
-  P77 sub -> failure x
+  AddopADD add -> failure x
+  AddopSUB sub -> failure x
 transInt_Term :: Int_Term -> Result
 transInt_Term x = case x of
-  P78 intterm mulop intfactor -> failure x
-  P79 intfactor -> failure x
+  Int_Term1 intterm mulop intfactor -> failure x
+  Int_TermInt_Factor intfactor -> failure x
 transMulop :: Mulop -> Result
 transMulop x = case x of
-  P80 mul -> failure x
-  P81 div -> failure x
+  MulopMUL mul -> failure x
+  MulopDIV div -> failure x
 transInt_Factor :: Int_Factor -> Result
 transInt_Factor x = case x of
-  P82 lpar expr rpar -> failure x
-  P83 size lpar id basicarraydimensions rpar -> failure x
-  P84 float lpar expr rpar -> failure x
-  P85 floor lpar expr rpar -> failure x
-  P86 ceil lpar expr rpar -> failure x
-  P87 id modifierlist -> failure x
-  P88 cid consargumentlist -> failure x
-  P89 ival -> failure x
-  P90 rval -> failure x
-  P91 bval -> failure x
-  P92 cval -> failure x
-  P93 sub intfactor -> failure x
+  Int_Factor1 lpar expr rpar -> failure x
+  Int_Factor2 size lpar id basicarraydimensions rpar -> failure x
+  Int_Factor3 float lpar expr rpar -> failure x
+  Int_Factor4 floor lpar expr rpar -> failure x
+  Int_Factor5 ceil lpar expr rpar -> failure x
+  Int_Factor6 id modifierlist -> failure x
+  Int_Factor7 cid consargumentlist -> failure x
+  Int_FactorIVAL ival -> failure x
+  Int_FactorRVAL rval -> failure x
+  Int_FactorBVAL bval -> failure x
+  Int_FactorCVAL cval -> failure x
+  Int_Factor8 sub intfactor -> failure x
 transModifier_List :: Modifier_List -> Result
 transModifier_List x = case x of
-  P94 funargumentlist -> failure x
-  P95 arraydimensions -> failure x
+  Modifier_ListFun_Argument_List funargumentlist -> failure x
+  Modifier_ListArray_Dimensions arraydimensions -> failure x
 transFun_Argument_List :: Fun_Argument_List -> Result
 transFun_Argument_List x = case x of
-  P96 lpar arguments rpar -> failure x
+  Fun_Argument_List1 lpar arguments rpar -> failure x
 transCons_Argument_List :: Cons_Argument_List -> Result
 transCons_Argument_List x = case x of
-  P97 funargumentlist -> failure x
-  P98 -> failure x
+  Cons_Argument_ListFun_Argument_List funargumentlist -> failure x
+  Cons_Argument_List1 -> failure x
 transArguments :: Arguments -> Result
 transArguments x = case x of
-  P99 expr morearguments -> failure x
-  P100 -> failure x
+  Arguments1 expr morearguments -> failure x
+  Arguments2 -> failure x
 transMore_Arguments :: More_Arguments -> Result
 transMore_Arguments x = case x of
-  P101 comma expr morearguments -> failure x
-  P102 -> failure x
+  More_Arguments1 comma expr morearguments -> failure x
+  More_Arguments2 -> failure x
 

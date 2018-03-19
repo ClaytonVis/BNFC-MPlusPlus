@@ -93,10 +93,10 @@ NOT literals are recognized by the regular expression
 EQUAL literals are recognized by the regular expression
 `````'='`````
 
-LT literals are recognized by the regular expression
+MyLT literals are recognized by the regular expression
 `````'<'`````
 
-GT literals are recognized by the regular expression
+MyGT literals are recognized by the regular expression
 `````'>'`````
 
 LE literals are recognized by the regular expression
@@ -246,7 +246,7 @@ The symbols -> (production),  **|**  (union)
 and **eps** (empty rule) belong to the BNF notation. 
 All other symbols are terminals.
 
-  | //Program// | -> | //Block// 
+  | //Prog// | -> | //Block// 
   | //Block// | -> | //Declarations// //Program_Body// 
   | //Declarations// | -> | //Declaration// //SEMICOLON// //Declarations// 
   |  |  **|**  | **eps**
@@ -302,10 +302,10 @@ All other symbols are terminals.
   | //More_Case// | -> | //SLASH// //Case// //More_Case// 
   |  |  **|**  | **eps**
   | //Case// | -> | //CID// //Var_List// //ARROW// //Prog_Stmt// 
-  | //Var_List// | -> | //LPAR// //Var_List'// //RPAR// 
+  | //Var_List// | -> | //LPAR// //Var_ListP// //RPAR// 
   |  |  **|**  | **eps**
-  | //Var_List'// | -> | //ID// //More_Var_List'// 
-  | //More_Var_List'// | -> | //COMMA// //ID// //More_Var_List'// 
+  | //Var_ListP// | -> | //ID// //More_Var_ListP// 
+  | //More_Var_ListP// | -> | //COMMA// //ID// //More_Var_ListP// 
   |  |  **|**  | **eps**
   | //Expr// | -> | //Expr// //OR// //BInt_Term// 
   |  |  **|**  | //BInt_Term// 
@@ -315,10 +315,10 @@ All other symbols are terminals.
   |  |  **|**  | //Int_Expr// //Compare_Op// //Int_Expr// 
   |  |  **|**  | //Int_Expr// 
   | //Compare_Op// | -> | //EQUAL// 
-  |  |  **|**  | //LT// 
-  |  |  **|**  | //GT// 
+  |  |  **|**  | //MyLT// 
+  |  |  **|**  | //MyGT// 
   |  |  **|**  | //LE// 
-  |  |  **|**  | //GT// 
+  |  |  **|**  | //GE// 
   | //Int_Expr// | -> | //Int_Expr// //Addop// //Int_Term// 
   |  |  **|**  | //Int_Term// 
   | //Addop// | -> | //ADD// 

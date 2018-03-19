@@ -111,11 +111,11 @@ instance Print NOT where
 instance Print EQUAL where
   prt _ (EQUAL i) = doc (showString i)
 
-instance Print LT where
-  prt _ (LT i) = doc (showString i)
+instance Print MyLT where
+  prt _ (MyLT i) = doc (showString i)
 
-instance Print GT where
-  prt _ (GT i) = doc (showString i)
+instance Print MyGT where
+  prt _ (MyGT i) = doc (showString i)
 
 instance Print LE where
   prt _ (LE i) = doc (showString i)
@@ -243,249 +243,249 @@ instance Print BVAL where
 instance Print CVAL where
   prt _ (CVAL i) = doc (showString i)
 
-instance Print Program where
+instance Print Prog where
   prt i e = case e of
-    P1 block -> prPrec i 0 (concatD [prt 0 block])
+    ProgBlock block -> prPrec i 0 (concatD [prt 0 block])
 
 instance Print Block where
   prt i e = case e of
-    P2 declarations programbody -> prPrec i 0 (concatD [prt 0 declarations, prt 0 programbody])
+    Block1 declarations programbody -> prPrec i 0 (concatD [prt 0 declarations, prt 0 programbody])
 
 instance Print Declarations where
   prt i e = case e of
-    P3 declaration semicolon declarations -> prPrec i 0 (concatD [prt 0 declaration, prt 0 semicolon, prt 0 declarations])
-    P4 -> prPrec i 0 (concatD [])
+    Declarations1 declaration semicolon declarations -> prPrec i 0 (concatD [prt 0 declaration, prt 0 semicolon, prt 0 declarations])
+    Declarations2 -> prPrec i 0 (concatD [])
 
 instance Print Declaration where
   prt i e = case e of
-    P5 vardeclaration -> prPrec i 0 (concatD [prt 0 vardeclaration])
-    P6 fundeclaration -> prPrec i 0 (concatD [prt 0 fundeclaration])
-    P7 datadeclaration -> prPrec i 0 (concatD [prt 0 datadeclaration])
+    DeclarationVar_Declaration vardeclaration -> prPrec i 0 (concatD [prt 0 vardeclaration])
+    DeclarationFun_Declaration fundeclaration -> prPrec i 0 (concatD [prt 0 fundeclaration])
+    DeclarationData_Declaration datadeclaration -> prPrec i 0 (concatD [prt 0 datadeclaration])
 
 instance Print Var_Declaration where
   prt i e = case e of
-    P8 var varspecs colon type_ -> prPrec i 0 (concatD [prt 0 var, prt 0 varspecs, prt 0 colon, prt 0 type_])
+    Var_Declaration1 var varspecs colon type_ -> prPrec i 0 (concatD [prt 0 var, prt 0 varspecs, prt 0 colon, prt 0 type_])
 
 instance Print Var_Specs where
   prt i e = case e of
-    P9 varspec morevarspecs -> prPrec i 0 (concatD [prt 0 varspec, prt 0 morevarspecs])
+    Var_Specs1 varspec morevarspecs -> prPrec i 0 (concatD [prt 0 varspec, prt 0 morevarspecs])
 
 instance Print More_Var_Specs where
   prt i e = case e of
-    P10 comma varspec morevarspecs -> prPrec i 0 (concatD [prt 0 comma, prt 0 varspec, prt 0 morevarspecs])
-    P11 -> prPrec i 0 (concatD [])
+    More_Var_Specs1 comma varspec morevarspecs -> prPrec i 0 (concatD [prt 0 comma, prt 0 varspec, prt 0 morevarspecs])
+    More_Var_Specs2 -> prPrec i 0 (concatD [])
 
 instance Print Var_Spec where
   prt i e = case e of
-    P12 id arraydimensions -> prPrec i 0 (concatD [prt 0 id, prt 0 arraydimensions])
+    Var_Spec1 id arraydimensions -> prPrec i 0 (concatD [prt 0 id, prt 0 arraydimensions])
 
 instance Print Array_Dimensions where
   prt i e = case e of
-    P13 slpar expr srpar arraydimensions -> prPrec i 0 (concatD [prt 0 slpar, prt 0 expr, prt 0 srpar, prt 0 arraydimensions])
-    P14 -> prPrec i 0 (concatD [])
+    Array_Dimensions1 slpar expr srpar arraydimensions -> prPrec i 0 (concatD [prt 0 slpar, prt 0 expr, prt 0 srpar, prt 0 arraydimensions])
+    Array_Dimensions2 -> prPrec i 0 (concatD [])
 
 instance Print Type where
   prt i e = case e of
-    P15 int -> prPrec i 0 (concatD [prt 0 int])
-    P16 real -> prPrec i 0 (concatD [prt 0 real])
-    P17 bool -> prPrec i 0 (concatD [prt 0 bool])
-    P18 char -> prPrec i 0 (concatD [prt 0 char])
-    P19 id -> prPrec i 0 (concatD [prt 0 id])
+    TypeINT int -> prPrec i 0 (concatD [prt 0 int])
+    TypeREAL real -> prPrec i 0 (concatD [prt 0 real])
+    TypeBOOL bool -> prPrec i 0 (concatD [prt 0 bool])
+    TypeCHAR char -> prPrec i 0 (concatD [prt 0 char])
+    TypeID id -> prPrec i 0 (concatD [prt 0 id])
 
 instance Print Fun_Declaration where
   prt i e = case e of
-    P20 fun id paramlist colon type_ clpar funblock crpar -> prPrec i 0 (concatD [prt 0 fun, prt 0 id, prt 0 paramlist, prt 0 colon, prt 0 type_, prt 0 clpar, prt 0 funblock, prt 0 crpar])
+    Fun_Declaration1 fun id paramlist colon type_ clpar funblock crpar -> prPrec i 0 (concatD [prt 0 fun, prt 0 id, prt 0 paramlist, prt 0 colon, prt 0 type_, prt 0 clpar, prt 0 funblock, prt 0 crpar])
 
 instance Print Fun_Block where
   prt i e = case e of
-    P21 declarations funbody -> prPrec i 0 (concatD [prt 0 declarations, prt 0 funbody])
+    Fun_Block1 declarations funbody -> prPrec i 0 (concatD [prt 0 declarations, prt 0 funbody])
 
 instance Print Param_List where
   prt i e = case e of
-    P22 lpar parameters rpar -> prPrec i 0 (concatD [prt 0 lpar, prt 0 parameters, prt 0 rpar])
+    Param_List1 lpar parameters rpar -> prPrec i 0 (concatD [prt 0 lpar, prt 0 parameters, prt 0 rpar])
 
 instance Print Parameters where
   prt i e = case e of
-    P23 basicdeclaration moreparameters -> prPrec i 0 (concatD [prt 0 basicdeclaration, prt 0 moreparameters])
-    P24 -> prPrec i 0 (concatD [])
+    Parameters1 basicdeclaration moreparameters -> prPrec i 0 (concatD [prt 0 basicdeclaration, prt 0 moreparameters])
+    Parameters2 -> prPrec i 0 (concatD [])
 
 instance Print More_Parameters where
   prt i e = case e of
-    P25 comma basicdeclaration moreparameters -> prPrec i 0 (concatD [prt 0 comma, prt 0 basicdeclaration, prt 0 moreparameters])
-    P26 -> prPrec i 0 (concatD [])
+    More_Parameters1 comma basicdeclaration moreparameters -> prPrec i 0 (concatD [prt 0 comma, prt 0 basicdeclaration, prt 0 moreparameters])
+    More_Parameters2 -> prPrec i 0 (concatD [])
 
 instance Print Basic_Declaration where
   prt i e = case e of
-    P27 id basicarraydimensions colon type_ -> prPrec i 0 (concatD [prt 0 id, prt 0 basicarraydimensions, prt 0 colon, prt 0 type_])
+    Basic_Declaration1 id basicarraydimensions colon type_ -> prPrec i 0 (concatD [prt 0 id, prt 0 basicarraydimensions, prt 0 colon, prt 0 type_])
 
 instance Print Basic_Array_Dimensions where
   prt i e = case e of
-    P28 slpar srpar basicarraydimensions -> prPrec i 0 (concatD [prt 0 slpar, prt 0 srpar, prt 0 basicarraydimensions])
-    P29 -> prPrec i 0 (concatD [])
+    Basic_Array_Dimensions1 slpar srpar basicarraydimensions -> prPrec i 0 (concatD [prt 0 slpar, prt 0 srpar, prt 0 basicarraydimensions])
+    Basic_Array_Dimensions2 -> prPrec i 0 (concatD [])
 
 instance Print Data_Declaration where
   prt i e = case e of
-    P30 data_ id equal consdeclarations -> prPrec i 0 (concatD [prt 0 data_, prt 0 id, prt 0 equal, prt 0 consdeclarations])
+    Data_Declaration1 data_ id equal consdeclarations -> prPrec i 0 (concatD [prt 0 data_, prt 0 id, prt 0 equal, prt 0 consdeclarations])
 
 instance Print Cons_Declarations where
   prt i e = case e of
-    P31 consdecl moreconsdecl -> prPrec i 0 (concatD [prt 0 consdecl, prt 0 moreconsdecl])
+    Cons_Declarations1 consdecl moreconsdecl -> prPrec i 0 (concatD [prt 0 consdecl, prt 0 moreconsdecl])
 
 instance Print More_Cons_Decl where
   prt i e = case e of
-    P32 slash consdecl moreconsdecl -> prPrec i 0 (concatD [prt 0 slash, prt 0 consdecl, prt 0 moreconsdecl])
-    P33 -> prPrec i 0 (concatD [])
+    More_Cons_Decl1 slash consdecl moreconsdecl -> prPrec i 0 (concatD [prt 0 slash, prt 0 consdecl, prt 0 moreconsdecl])
+    More_Cons_Decl2 -> prPrec i 0 (concatD [])
 
 instance Print Cons_Decl where
   prt i e = case e of
-    P34 cid of_ typelist -> prPrec i 0 (concatD [prt 0 cid, prt 0 of_, prt 0 typelist])
-    P35 cid -> prPrec i 0 (concatD [prt 0 cid])
+    Cons_Decl1 cid of_ typelist -> prPrec i 0 (concatD [prt 0 cid, prt 0 of_, prt 0 typelist])
+    Cons_DeclCID cid -> prPrec i 0 (concatD [prt 0 cid])
 
 instance Print Type_List where
   prt i e = case e of
-    P36 type_ moretype -> prPrec i 0 (concatD [prt 0 type_, prt 0 moretype])
+    Type_List1 type_ moretype -> prPrec i 0 (concatD [prt 0 type_, prt 0 moretype])
 
 instance Print More_Type where
   prt i e = case e of
-    P37 mul type_ moretype -> prPrec i 0 (concatD [prt 0 mul, prt 0 type_, prt 0 moretype])
-    P38 -> prPrec i 0 (concatD [])
+    More_Type1 mul type_ moretype -> prPrec i 0 (concatD [prt 0 mul, prt 0 type_, prt 0 moretype])
+    More_Type2 -> prPrec i 0 (concatD [])
 
 instance Print Program_Body where
   prt i e = case e of
-    P39 begin progstmts end -> prPrec i 0 (concatD [prt 0 begin, prt 0 progstmts, prt 0 end])
-    P40 progstmts -> prPrec i 0 (concatD [prt 0 progstmts])
+    Program_Body1 begin progstmts end -> prPrec i 0 (concatD [prt 0 begin, prt 0 progstmts, prt 0 end])
+    Program_BodyProg_Stmts progstmts -> prPrec i 0 (concatD [prt 0 progstmts])
 
 instance Print Fun_Body where
   prt i e = case e of
-    P41 begin progstmts return expr semicolon end -> prPrec i 0 (concatD [prt 0 begin, prt 0 progstmts, prt 0 return, prt 0 expr, prt 0 semicolon, prt 0 end])
-    P42 progstmts return expr semicolon -> prPrec i 0 (concatD [prt 0 progstmts, prt 0 return, prt 0 expr, prt 0 semicolon])
+    Fun_Body1 begin progstmts return expr semicolon end -> prPrec i 0 (concatD [prt 0 begin, prt 0 progstmts, prt 0 return, prt 0 expr, prt 0 semicolon, prt 0 end])
+    Fun_Body2 progstmts return expr semicolon -> prPrec i 0 (concatD [prt 0 progstmts, prt 0 return, prt 0 expr, prt 0 semicolon])
 
 instance Print Prog_Stmts where
   prt i e = case e of
-    P43 progstmt semicolon progstmts -> prPrec i 0 (concatD [prt 0 progstmt, prt 0 semicolon, prt 0 progstmts])
-    P44 -> prPrec i 0 (concatD [])
+    Prog_Stmts1 progstmt semicolon progstmts -> prPrec i 0 (concatD [prt 0 progstmt, prt 0 semicolon, prt 0 progstmts])
+    Prog_Stmts2 -> prPrec i 0 (concatD [])
 
 instance Print Prog_Stmt where
   prt i e = case e of
-    P45 if_ expr then_ progstmt1 else_ progstmt2 -> prPrec i 0 (concatD [prt 0 if_, prt 0 expr, prt 0 then_, prt 0 progstmt1, prt 0 else_, prt 0 progstmt2])
-    P46 while expr do_ progstmt -> prPrec i 0 (concatD [prt 0 while, prt 0 expr, prt 0 do_, prt 0 progstmt])
-    P47 read location -> prPrec i 0 (concatD [prt 0 read, prt 0 location])
-    P48 location assign expr -> prPrec i 0 (concatD [prt 0 location, prt 0 assign, prt 0 expr])
-    P49 print expr -> prPrec i 0 (concatD [prt 0 print, prt 0 expr])
-    P50 clpar block crpar -> prPrec i 0 (concatD [prt 0 clpar, prt 0 block, prt 0 crpar])
-    P51 case_ expr of_ clpar caselist crpar -> prPrec i 0 (concatD [prt 0 case_, prt 0 expr, prt 0 of_, prt 0 clpar, prt 0 caselist, prt 0 crpar])
+    Prog_Stmt1 if_ expr then_ progstmt1 else_ progstmt2 -> prPrec i 0 (concatD [prt 0 if_, prt 0 expr, prt 0 then_, prt 0 progstmt1, prt 0 else_, prt 0 progstmt2])
+    Prog_Stmt2 while expr do_ progstmt -> prPrec i 0 (concatD [prt 0 while, prt 0 expr, prt 0 do_, prt 0 progstmt])
+    Prog_Stmt3 read location -> prPrec i 0 (concatD [prt 0 read, prt 0 location])
+    Prog_Stmt4 location assign expr -> prPrec i 0 (concatD [prt 0 location, prt 0 assign, prt 0 expr])
+    Prog_Stmt5 print expr -> prPrec i 0 (concatD [prt 0 print, prt 0 expr])
+    Prog_Stmt6 clpar block crpar -> prPrec i 0 (concatD [prt 0 clpar, prt 0 block, prt 0 crpar])
+    Prog_Stmt7 case_ expr of_ clpar caselist crpar -> prPrec i 0 (concatD [prt 0 case_, prt 0 expr, prt 0 of_, prt 0 clpar, prt 0 caselist, prt 0 crpar])
 
 instance Print Location where
   prt i e = case e of
-    P52 id arraydimensions -> prPrec i 0 (concatD [prt 0 id, prt 0 arraydimensions])
+    Location1 id arraydimensions -> prPrec i 0 (concatD [prt 0 id, prt 0 arraydimensions])
 
 instance Print Case_List where
   prt i e = case e of
-    P53 case_ morecase -> prPrec i 0 (concatD [prt 0 case_, prt 0 morecase])
+    Case_List1 case_ morecase -> prPrec i 0 (concatD [prt 0 case_, prt 0 morecase])
 
 instance Print More_Case where
   prt i e = case e of
-    P54 slash case_ morecase -> prPrec i 0 (concatD [prt 0 slash, prt 0 case_, prt 0 morecase])
-    P55 -> prPrec i 0 (concatD [])
+    More_Case1 slash case_ morecase -> prPrec i 0 (concatD [prt 0 slash, prt 0 case_, prt 0 morecase])
+    More_Case2 -> prPrec i 0 (concatD [])
 
 instance Print Case where
   prt i e = case e of
-    P56 cid varlist arrow progstmt -> prPrec i 0 (concatD [prt 0 cid, prt 0 varlist, prt 0 arrow, prt 0 progstmt])
+    Case1 cid varlist arrow progstmt -> prPrec i 0 (concatD [prt 0 cid, prt 0 varlist, prt 0 arrow, prt 0 progstmt])
 
 instance Print Var_List where
   prt i e = case e of
-    P57 lpar varlist rpar -> prPrec i 0 (concatD [prt 0 lpar, prt 0 varlist, prt 0 rpar])
-    P58 -> prPrec i 0 (concatD [])
+    Var_List1 lpar varlistp rpar -> prPrec i 0 (concatD [prt 0 lpar, prt 0 varlistp, prt 0 rpar])
+    Var_List2 -> prPrec i 0 (concatD [])
 
-instance Print Var_List' where
+instance Print Var_ListP where
   prt i e = case e of
-    P59 id morevarlist -> prPrec i 0 (concatD [prt 0 id, prt 0 morevarlist])
+    Var_ListP1 id morevarlistp -> prPrec i 0 (concatD [prt 0 id, prt 0 morevarlistp])
 
-instance Print More_Var_List' where
+instance Print More_Var_ListP where
   prt i e = case e of
-    P60 comma id morevarlist -> prPrec i 0 (concatD [prt 0 comma, prt 0 id, prt 0 morevarlist])
-    P61 -> prPrec i 0 (concatD [])
+    More_Var_ListP1 comma id morevarlistp -> prPrec i 0 (concatD [prt 0 comma, prt 0 id, prt 0 morevarlistp])
+    More_Var_ListP2 -> prPrec i 0 (concatD [])
 
 instance Print Expr where
   prt i e = case e of
-    P62 expr or bintterm -> prPrec i 0 (concatD [prt 0 expr, prt 0 or, prt 0 bintterm])
-    P63 bintterm -> prPrec i 0 (concatD [prt 0 bintterm])
+    Expr1 expr or bintterm -> prPrec i 0 (concatD [prt 0 expr, prt 0 or, prt 0 bintterm])
+    ExprBInt_Term bintterm -> prPrec i 0 (concatD [prt 0 bintterm])
 
 instance Print BInt_Term where
   prt i e = case e of
-    P64 bintterm and bintfactor -> prPrec i 0 (concatD [prt 0 bintterm, prt 0 and, prt 0 bintfactor])
-    P65 bintfactor -> prPrec i 0 (concatD [prt 0 bintfactor])
+    BInt_Term1 bintterm and bintfactor -> prPrec i 0 (concatD [prt 0 bintterm, prt 0 and, prt 0 bintfactor])
+    BInt_TermBInt_Factor bintfactor -> prPrec i 0 (concatD [prt 0 bintfactor])
 
 instance Print BInt_Factor where
   prt i e = case e of
-    P66 not bintfactor -> prPrec i 0 (concatD [prt 0 not, prt 0 bintfactor])
-    P67 intexpr1 compareop intexpr2 -> prPrec i 0 (concatD [prt 0 intexpr1, prt 0 compareop, prt 0 intexpr2])
-    P68 intexpr -> prPrec i 0 (concatD [prt 0 intexpr])
+    BInt_Factor1 not bintfactor -> prPrec i 0 (concatD [prt 0 not, prt 0 bintfactor])
+    BInt_Factor2 intexpr1 compareop intexpr2 -> prPrec i 0 (concatD [prt 0 intexpr1, prt 0 compareop, prt 0 intexpr2])
+    BInt_FactorInt_Expr intexpr -> prPrec i 0 (concatD [prt 0 intexpr])
 
 instance Print Compare_Op where
   prt i e = case e of
-    P69 equal -> prPrec i 0 (concatD [prt 0 equal])
-    P70 lt -> prPrec i 0 (concatD [prt 0 lt])
-    P71 gt -> prPrec i 0 (concatD [prt 0 gt])
-    P72 le -> prPrec i 0 (concatD [prt 0 le])
-    P73 gt -> prPrec i 0 (concatD [prt 0 gt])
+    Compare_OpEQUAL equal -> prPrec i 0 (concatD [prt 0 equal])
+    Compare_OpMyLT mylt -> prPrec i 0 (concatD [prt 0 mylt])
+    Compare_OpMyGT mygt -> prPrec i 0 (concatD [prt 0 mygt])
+    Compare_OpLE le -> prPrec i 0 (concatD [prt 0 le])
+    Compare_OpGE ge -> prPrec i 0 (concatD [prt 0 ge])
 
 instance Print Int_Expr where
   prt i e = case e of
-    P74 intexpr addop intterm -> prPrec i 0 (concatD [prt 0 intexpr, prt 0 addop, prt 0 intterm])
-    P75 intterm -> prPrec i 0 (concatD [prt 0 intterm])
+    Int_Expr1 intexpr addop intterm -> prPrec i 0 (concatD [prt 0 intexpr, prt 0 addop, prt 0 intterm])
+    Int_ExprInt_Term intterm -> prPrec i 0 (concatD [prt 0 intterm])
 
 instance Print Addop where
   prt i e = case e of
-    P76 add -> prPrec i 0 (concatD [prt 0 add])
-    P77 sub -> prPrec i 0 (concatD [prt 0 sub])
+    AddopADD add -> prPrec i 0 (concatD [prt 0 add])
+    AddopSUB sub -> prPrec i 0 (concatD [prt 0 sub])
 
 instance Print Int_Term where
   prt i e = case e of
-    P78 intterm mulop intfactor -> prPrec i 0 (concatD [prt 0 intterm, prt 0 mulop, prt 0 intfactor])
-    P79 intfactor -> prPrec i 0 (concatD [prt 0 intfactor])
+    Int_Term1 intterm mulop intfactor -> prPrec i 0 (concatD [prt 0 intterm, prt 0 mulop, prt 0 intfactor])
+    Int_TermInt_Factor intfactor -> prPrec i 0 (concatD [prt 0 intfactor])
 
 instance Print Mulop where
   prt i e = case e of
-    P80 mul -> prPrec i 0 (concatD [prt 0 mul])
-    P81 div -> prPrec i 0 (concatD [prt 0 div])
+    MulopMUL mul -> prPrec i 0 (concatD [prt 0 mul])
+    MulopDIV div -> prPrec i 0 (concatD [prt 0 div])
 
 instance Print Int_Factor where
   prt i e = case e of
-    P82 lpar expr rpar -> prPrec i 0 (concatD [prt 0 lpar, prt 0 expr, prt 0 rpar])
-    P83 size lpar id basicarraydimensions rpar -> prPrec i 0 (concatD [prt 0 size, prt 0 lpar, prt 0 id, prt 0 basicarraydimensions, prt 0 rpar])
-    P84 float lpar expr rpar -> prPrec i 0 (concatD [prt 0 float, prt 0 lpar, prt 0 expr, prt 0 rpar])
-    P85 floor lpar expr rpar -> prPrec i 0 (concatD [prt 0 floor, prt 0 lpar, prt 0 expr, prt 0 rpar])
-    P86 ceil lpar expr rpar -> prPrec i 0 (concatD [prt 0 ceil, prt 0 lpar, prt 0 expr, prt 0 rpar])
-    P87 id modifierlist -> prPrec i 0 (concatD [prt 0 id, prt 0 modifierlist])
-    P88 cid consargumentlist -> prPrec i 0 (concatD [prt 0 cid, prt 0 consargumentlist])
-    P89 ival -> prPrec i 0 (concatD [prt 0 ival])
-    P90 rval -> prPrec i 0 (concatD [prt 0 rval])
-    P91 bval -> prPrec i 0 (concatD [prt 0 bval])
-    P92 cval -> prPrec i 0 (concatD [prt 0 cval])
-    P93 sub intfactor -> prPrec i 0 (concatD [prt 0 sub, prt 0 intfactor])
+    Int_Factor1 lpar expr rpar -> prPrec i 0 (concatD [prt 0 lpar, prt 0 expr, prt 0 rpar])
+    Int_Factor2 size lpar id basicarraydimensions rpar -> prPrec i 0 (concatD [prt 0 size, prt 0 lpar, prt 0 id, prt 0 basicarraydimensions, prt 0 rpar])
+    Int_Factor3 float lpar expr rpar -> prPrec i 0 (concatD [prt 0 float, prt 0 lpar, prt 0 expr, prt 0 rpar])
+    Int_Factor4 floor lpar expr rpar -> prPrec i 0 (concatD [prt 0 floor, prt 0 lpar, prt 0 expr, prt 0 rpar])
+    Int_Factor5 ceil lpar expr rpar -> prPrec i 0 (concatD [prt 0 ceil, prt 0 lpar, prt 0 expr, prt 0 rpar])
+    Int_Factor6 id modifierlist -> prPrec i 0 (concatD [prt 0 id, prt 0 modifierlist])
+    Int_Factor7 cid consargumentlist -> prPrec i 0 (concatD [prt 0 cid, prt 0 consargumentlist])
+    Int_FactorIVAL ival -> prPrec i 0 (concatD [prt 0 ival])
+    Int_FactorRVAL rval -> prPrec i 0 (concatD [prt 0 rval])
+    Int_FactorBVAL bval -> prPrec i 0 (concatD [prt 0 bval])
+    Int_FactorCVAL cval -> prPrec i 0 (concatD [prt 0 cval])
+    Int_Factor8 sub intfactor -> prPrec i 0 (concatD [prt 0 sub, prt 0 intfactor])
 
 instance Print Modifier_List where
   prt i e = case e of
-    P94 funargumentlist -> prPrec i 0 (concatD [prt 0 funargumentlist])
-    P95 arraydimensions -> prPrec i 0 (concatD [prt 0 arraydimensions])
+    Modifier_ListFun_Argument_List funargumentlist -> prPrec i 0 (concatD [prt 0 funargumentlist])
+    Modifier_ListArray_Dimensions arraydimensions -> prPrec i 0 (concatD [prt 0 arraydimensions])
 
 instance Print Fun_Argument_List where
   prt i e = case e of
-    P96 lpar arguments rpar -> prPrec i 0 (concatD [prt 0 lpar, prt 0 arguments, prt 0 rpar])
+    Fun_Argument_List1 lpar arguments rpar -> prPrec i 0 (concatD [prt 0 lpar, prt 0 arguments, prt 0 rpar])
 
 instance Print Cons_Argument_List where
   prt i e = case e of
-    P97 funargumentlist -> prPrec i 0 (concatD [prt 0 funargumentlist])
-    P98 -> prPrec i 0 (concatD [])
+    Cons_Argument_ListFun_Argument_List funargumentlist -> prPrec i 0 (concatD [prt 0 funargumentlist])
+    Cons_Argument_List1 -> prPrec i 0 (concatD [])
 
 instance Print Arguments where
   prt i e = case e of
-    P99 expr morearguments -> prPrec i 0 (concatD [prt 0 expr, prt 0 morearguments])
-    P100 -> prPrec i 0 (concatD [])
+    Arguments1 expr morearguments -> prPrec i 0 (concatD [prt 0 expr, prt 0 morearguments])
+    Arguments2 -> prPrec i 0 (concatD [])
 
 instance Print More_Arguments where
   prt i e = case e of
-    P101 comma expr morearguments -> prPrec i 0 (concatD [prt 0 comma, prt 0 expr, prt 0 morearguments])
-    P102 -> prPrec i 0 (concatD [])
+    More_Arguments1 comma expr morearguments -> prPrec i 0 (concatD [prt 0 comma, prt 0 expr, prt 0 morearguments])
+    More_Arguments2 -> prPrec i 0 (concatD [])
 

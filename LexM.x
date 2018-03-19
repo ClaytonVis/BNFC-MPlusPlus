@@ -36,8 +36,8 @@ $white+ ;
 \| \| { tok (\p s -> PT p (eitherResIdent (T_OR . share) s)) }
 n o t { tok (\p s -> PT p (eitherResIdent (T_NOT . share) s)) }
 \= { tok (\p s -> PT p (eitherResIdent (T_EQUAL . share) s)) }
-\< { tok (\p s -> PT p (eitherResIdent (T_LT . share) s)) }
-\> { tok (\p s -> PT p (eitherResIdent (T_GT . share) s)) }
+\< { tok (\p s -> PT p (eitherResIdent (T_MyLT . share) s)) }
+\> { tok (\p s -> PT p (eitherResIdent (T_MyGT . share) s)) }
 \= \< { tok (\p s -> PT p (eitherResIdent (T_LE . share) s)) }
 \> \= { tok (\p s -> PT p (eitherResIdent (T_GE . share) s)) }
 \: \= { tok (\p s -> PT p (eitherResIdent (T_ASSIGN . share) s)) }
@@ -111,8 +111,8 @@ data Tok =
  | T_OR !String
  | T_NOT !String
  | T_EQUAL !String
- | T_LT !String
- | T_GT !String
+ | T_MyLT !String
+ | T_MyGT !String
  | T_LE !String
  | T_GE !String
  | T_ASSIGN !String
@@ -201,8 +201,8 @@ prToken t = case t of
   PT _ (T_OR s) -> s
   PT _ (T_NOT s) -> s
   PT _ (T_EQUAL s) -> s
-  PT _ (T_LT s) -> s
-  PT _ (T_GT s) -> s
+  PT _ (T_MyLT s) -> s
+  PT _ (T_MyGT s) -> s
   PT _ (T_LE s) -> s
   PT _ (T_GE s) -> s
   PT _ (T_ASSIGN s) -> s
