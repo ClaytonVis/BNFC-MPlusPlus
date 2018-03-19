@@ -4,6 +4,8 @@ module SkelM where
 
 import AbsM
 import ErrM
+import AST  --Added
+
 type Result = Err String
 
 failure :: Show a => a -> Result
