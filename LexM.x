@@ -20,66 +20,19 @@ $d = [0-9]                -- digit
 $i = [$l $d _ ']          -- identifier character
 $u = [\0-\255]          -- universal: any character
 
+@rsyms =    -- symbols and non-identifier-like reserved words
+   \; | \: | \[ | \] | \{ | \} | \( | \) | \, | \: \= | \| \| | \& \& | \= | \< | \> | \= \< | \> \= | \+ | \- | \* | \/
 
 :-
 "%" [.]* ; -- Toss single line comments
 "/*" ([$u # \*] | \*+ [$u # [\* \/]])* ("*")+ "/" ;
 
 $white+ ;
-
-\+ { tok (\p s -> PT p (eitherResIdent (T_ADD . share) s)) }
-\- { tok (\p s -> PT p (eitherResIdent (T_SUB . share) s)) }
-\* { tok (\p s -> PT p (eitherResIdent (T_MUL . share) s)) }
-\/ { tok (\p s -> PT p (eitherResIdent (T_DIV . share) s)) }
-\= \> { tok (\p s -> PT p (eitherResIdent (T_ARROW . share) s)) }
-\& \& { tok (\p s -> PT p (eitherResIdent (T_AND . share) s)) }
-\| \| { tok (\p s -> PT p (eitherResIdent (T_OR . share) s)) }
-n o t { tok (\p s -> PT p (eitherResIdent (T_NOT . share) s)) }
-\= { tok (\p s -> PT p (eitherResIdent (T_EQUAL . share) s)) }
-\< { tok (\p s -> PT p (eitherResIdent (T_MyLT . share) s)) }
-\> { tok (\p s -> PT p (eitherResIdent (T_MyGT . share) s)) }
-\= \< { tok (\p s -> PT p (eitherResIdent (T_LE . share) s)) }
-\> \= { tok (\p s -> PT p (eitherResIdent (T_GE . share) s)) }
-\: \= { tok (\p s -> PT p (eitherResIdent (T_ASSIGN . share) s)) }
-\( { tok (\p s -> PT p (eitherResIdent (T_LPAR . share) s)) }
-\) { tok (\p s -> PT p (eitherResIdent (T_RPAR . share) s)) }
-\{ { tok (\p s -> PT p (eitherResIdent (T_CLPAR . share) s)) }
-\} { tok (\p s -> PT p (eitherResIdent (T_CRPAR . share) s)) }
-\[ { tok (\p s -> PT p (eitherResIdent (T_SLPAR . share) s)) }
-\] { tok (\p s -> PT p (eitherResIdent (T_SRPAR . share) s)) }
-\| { tok (\p s -> PT p (eitherResIdent (T_SLASH . share) s)) }
-\: { tok (\p s -> PT p (eitherResIdent (T_COLON . share) s)) }
-\; { tok (\p s -> PT p (eitherResIdent (T_SEMICOLON . share) s)) }
-\, { tok (\p s -> PT p (eitherResIdent (T_COMMA . share) s)) }
-i f { tok (\p s -> PT p (eitherResIdent (T_IF . share) s)) }
-t h e n { tok (\p s -> PT p (eitherResIdent (T_THEN . share) s)) }
-w h i l e { tok (\p s -> PT p (eitherResIdent (T_WHILE . share) s)) }
-d o { tok (\p s -> PT p (eitherResIdent (T_DO . share) s)) }
-r e a d { tok (\p s -> PT p (eitherResIdent (T_READ . share) s)) }
-e l s e { tok (\p s -> PT p (eitherResIdent (T_ELSE . share) s)) }
-b e g i n { tok (\p s -> PT p (eitherResIdent (T_BEGIN . share) s)) }
-e n d { tok (\p s -> PT p (eitherResIdent (T_END . share) s)) }
-c a s e { tok (\p s -> PT p (eitherResIdent (T_CASE . share) s)) }
-o f { tok (\p s -> PT p (eitherResIdent (T_OF . share) s)) }
-p r i n t { tok (\p s -> PT p (eitherResIdent (T_PRINT . share) s)) }
-i n t { tok (\p s -> PT p (eitherResIdent (T_INT . share) s)) }
-b o o l { tok (\p s -> PT p (eitherResIdent (T_BOOL . share) s)) }
-c h a r { tok (\p s -> PT p (eitherResIdent (T_CHAR . share) s)) }
-r e a l { tok (\p s -> PT p (eitherResIdent (T_REAL . share) s)) }
-v a r { tok (\p s -> PT p (eitherResIdent (T_VAR . share) s)) }
-d a t a { tok (\p s -> PT p (eitherResIdent (T_DATA . share) s)) }
-s i z e { tok (\p s -> PT p (eitherResIdent (T_SIZE . share) s)) }
-f l o a t { tok (\p s -> PT p (eitherResIdent (T_FLOAT . share) s)) }
-f l o o r { tok (\p s -> PT p (eitherResIdent (T_FLOOR . share) s)) }
-c e i l { tok (\p s -> PT p (eitherResIdent (T_CEIL . share) s)) }
-f u n { tok (\p s -> PT p (eitherResIdent (T_FUN . share) s)) }
-r e t u r n { tok (\p s -> PT p (eitherResIdent (T_RETURN . share) s)) }
-\# (\_ | $l | $d)* { tok (\p s -> PT p (eitherResIdent (T_CID . share) s)) }
+@rsyms { tok (\p s -> PT p (eitherResIdent (TV . share) s)) }
 $l (\_ | $l | $d)* { tok (\p s -> PT p (eitherResIdent (T_ID . share) s)) }
 $d + { tok (\p s -> PT p (eitherResIdent (T_IVAL . share) s)) }
 $d + \. $d + { tok (\p s -> PT p (eitherResIdent (T_RVAL . share) s)) }
 t r u e | f a l s e { tok (\p s -> PT p (eitherResIdent (T_BVAL . share) s)) }
-\" (\n)\" | \" (\t)\" | \" ($c ($l | $d | \_)) \" { tok (\p s -> PT p (eitherResIdent (T_CVAL . share) s)) }
 
 $l $i*   { tok (\p s -> PT p (eitherResIdent (TV . share) s)) }
 
@@ -102,59 +55,10 @@ data Tok =
  | TV !String         -- identifiers
  | TD !String         -- double precision float literals
  | TC !String         -- character literals
- | T_ADD !String
- | T_SUB !String
- | T_MUL !String
- | T_DIV !String
- | T_ARROW !String
- | T_AND !String
- | T_OR !String
- | T_NOT !String
- | T_EQUAL !String
- | T_MyLT !String
- | T_MyGT !String
- | T_LE !String
- | T_GE !String
- | T_ASSIGN !String
- | T_LPAR !String
- | T_RPAR !String
- | T_CLPAR !String
- | T_CRPAR !String
- | T_SLPAR !String
- | T_SRPAR !String
- | T_SLASH !String
- | T_COLON !String
- | T_SEMICOLON !String
- | T_COMMA !String
- | T_IF !String
- | T_THEN !String
- | T_WHILE !String
- | T_DO !String
- | T_READ !String
- | T_ELSE !String
- | T_BEGIN !String
- | T_END !String
- | T_CASE !String
- | T_OF !String
- | T_PRINT !String
- | T_INT !String
- | T_BOOL !String
- | T_CHAR !String
- | T_REAL !String
- | T_VAR !String
- | T_DATA !String
- | T_SIZE !String
- | T_FLOAT !String
- | T_FLOOR !String
- | T_CEIL !String
- | T_FUN !String
- | T_RETURN !String
- | T_CID !String
  | T_ID !String
  | T_IVAL !String
  | T_RVAL !String
  | T_BVAL !String
- | T_CVAL !String
 
  deriving (Eq,Show,Ord)
 
@@ -192,59 +96,10 @@ prToken t = case t of
   PT _ (TD s)   -> s
   PT _ (TC s)   -> s
   Err _         -> "#error"
-  PT _ (T_ADD s) -> s
-  PT _ (T_SUB s) -> s
-  PT _ (T_MUL s) -> s
-  PT _ (T_DIV s) -> s
-  PT _ (T_ARROW s) -> s
-  PT _ (T_AND s) -> s
-  PT _ (T_OR s) -> s
-  PT _ (T_NOT s) -> s
-  PT _ (T_EQUAL s) -> s
-  PT _ (T_MyLT s) -> s
-  PT _ (T_MyGT s) -> s
-  PT _ (T_LE s) -> s
-  PT _ (T_GE s) -> s
-  PT _ (T_ASSIGN s) -> s
-  PT _ (T_LPAR s) -> s
-  PT _ (T_RPAR s) -> s
-  PT _ (T_CLPAR s) -> s
-  PT _ (T_CRPAR s) -> s
-  PT _ (T_SLPAR s) -> s
-  PT _ (T_SRPAR s) -> s
-  PT _ (T_SLASH s) -> s
-  PT _ (T_COLON s) -> s
-  PT _ (T_SEMICOLON s) -> s
-  PT _ (T_COMMA s) -> s
-  PT _ (T_IF s) -> s
-  PT _ (T_THEN s) -> s
-  PT _ (T_WHILE s) -> s
-  PT _ (T_DO s) -> s
-  PT _ (T_READ s) -> s
-  PT _ (T_ELSE s) -> s
-  PT _ (T_BEGIN s) -> s
-  PT _ (T_END s) -> s
-  PT _ (T_CASE s) -> s
-  PT _ (T_OF s) -> s
-  PT _ (T_PRINT s) -> s
-  PT _ (T_INT s) -> s
-  PT _ (T_BOOL s) -> s
-  PT _ (T_CHAR s) -> s
-  PT _ (T_REAL s) -> s
-  PT _ (T_VAR s) -> s
-  PT _ (T_DATA s) -> s
-  PT _ (T_SIZE s) -> s
-  PT _ (T_FLOAT s) -> s
-  PT _ (T_FLOOR s) -> s
-  PT _ (T_CEIL s) -> s
-  PT _ (T_FUN s) -> s
-  PT _ (T_RETURN s) -> s
-  PT _ (T_CID s) -> s
   PT _ (T_ID s) -> s
   PT _ (T_IVAL s) -> s
   PT _ (T_RVAL s) -> s
   PT _ (T_BVAL s) -> s
-  PT _ (T_CVAL s) -> s
 
 
 data BTree = N | B String Tok BTree BTree deriving (Show)
@@ -258,7 +113,7 @@ eitherResIdent tv s = treeFind resWords
                               | s == a = t
 
 resWords :: BTree
-resWords = N
+resWords = b "ceil" 21 (b ";" 11 (b "," 6 (b ")" 3 (b "(" 2 (b "&&" 1 N N) N) (b "+" 5 (b "*" 4 N N) N)) (b ":" 9 (b "/" 8 (b "-" 7 N N) N) (b ":=" 10 N N))) (b ">=" 16 (b "=<" 14 (b "=" 13 (b "<" 12 N N) N) (b ">" 15 N N)) (b "begin" 19 (b "]" 18 (b "[" 17 N N) N) (b "bool" 20 N N)))) (b "read" 32 (b "fun" 27 (b "end" 24 (b "else" 23 (b "do" 22 N N) N) (b "floor" 26 (b "float" 25 N N) N)) (b "not" 30 (b "int" 29 (b "if" 28 N N) N) (b "print" 31 N N))) (b "var" 37 (b "size" 35 (b "return" 34 (b "real" 33 N N) N) (b "then" 36 N N)) (b "||" 40 (b "{" 39 (b "while" 38 N N) N) (b "}" 41 N N))))
    where b s n = let bs = id s
                   in B bs (TS bs n)
 

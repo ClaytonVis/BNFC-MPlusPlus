@@ -13,11 +13,8 @@ import ErrM
 %name pDeclarations Declarations
 %name pDeclaration Declaration
 %name pVar_Declaration Var_Declaration
-%name pVar_Specs Var_Specs
-%name pMore_Var_Specs More_Var_Specs
-%name pVar_Spec Var_Spec
-%name pArray_Dimensions Array_Dimensions
 %name pType Type
+%name pArray_Dimensions Array_Dimensions
 %name pFun_Declaration Fun_Declaration
 %name pFun_Block Fun_Block
 %name pParam_List Param_List
@@ -25,23 +22,11 @@ import ErrM
 %name pMore_Parameters More_Parameters
 %name pBasic_Declaration Basic_Declaration
 %name pBasic_Array_Dimensions Basic_Array_Dimensions
-%name pData_Declaration Data_Declaration
-%name pCons_Declarations Cons_Declarations
-%name pMore_Cons_Decl More_Cons_Decl
-%name pCons_Decl Cons_Decl
-%name pType_List Type_List
-%name pMore_Type More_Type
 %name pProgram_Body Program_Body
 %name pFun_Body Fun_Body
 %name pProg_Stmts Prog_Stmts
 %name pProg_Stmt Prog_Stmt
-%name pLocation Location
-%name pCase_List Case_List
-%name pMore_Case More_Case
-%name pCase Case
-%name pVar_List Var_List
-%name pVar_ListP Var_ListP
-%name pMore_Var_ListP More_Var_ListP
+%name pIdentifier Identifier
 %name pExpr Expr
 %name pBInt_Term BInt_Term
 %name pBInt_Factor BInt_Factor
@@ -52,273 +37,164 @@ import ErrM
 %name pMulop Mulop
 %name pInt_Factor Int_Factor
 %name pModifier_List Modifier_List
-%name pFun_Argument_List Fun_Argument_List
-%name pCons_Argument_List Cons_Argument_List
 %name pArguments Arguments
 %name pMore_Arguments More_Arguments
 -- no lexer declaration
 %monad { Err } { thenM } { returnM }
 %tokentype {Token}
 %token
+  '&&' { PT _ (TS _ 1) }
+  '(' { PT _ (TS _ 2) }
+  ')' { PT _ (TS _ 3) }
+  '*' { PT _ (TS _ 4) }
+  '+' { PT _ (TS _ 5) }
+  ',' { PT _ (TS _ 6) }
+  '-' { PT _ (TS _ 7) }
+  '/' { PT _ (TS _ 8) }
+  ':' { PT _ (TS _ 9) }
+  ':=' { PT _ (TS _ 10) }
+  ';' { PT _ (TS _ 11) }
+  '<' { PT _ (TS _ 12) }
+  '=' { PT _ (TS _ 13) }
+  '=<' { PT _ (TS _ 14) }
+  '>' { PT _ (TS _ 15) }
+  '>=' { PT _ (TS _ 16) }
+  '[' { PT _ (TS _ 17) }
+  ']' { PT _ (TS _ 18) }
+  'begin' { PT _ (TS _ 19) }
+  'bool' { PT _ (TS _ 20) }
+  'ceil' { PT _ (TS _ 21) }
+  'do' { PT _ (TS _ 22) }
+  'else' { PT _ (TS _ 23) }
+  'end' { PT _ (TS _ 24) }
+  'float' { PT _ (TS _ 25) }
+  'floor' { PT _ (TS _ 26) }
+  'fun' { PT _ (TS _ 27) }
+  'if' { PT _ (TS _ 28) }
+  'int' { PT _ (TS _ 29) }
+  'not' { PT _ (TS _ 30) }
+  'print' { PT _ (TS _ 31) }
+  'read' { PT _ (TS _ 32) }
+  'real' { PT _ (TS _ 33) }
+  'return' { PT _ (TS _ 34) }
+  'size' { PT _ (TS _ 35) }
+  'then' { PT _ (TS _ 36) }
+  'var' { PT _ (TS _ 37) }
+  'while' { PT _ (TS _ 38) }
+  '{' { PT _ (TS _ 39) }
+  '||' { PT _ (TS _ 40) }
+  '}' { PT _ (TS _ 41) }
 
-L_ADD { PT _ (T_ADD $$) }
-L_SUB { PT _ (T_SUB $$) }
-L_MUL { PT _ (T_MUL $$) }
-L_DIV { PT _ (T_DIV $$) }
-L_ARROW { PT _ (T_ARROW $$) }
-L_AND { PT _ (T_AND $$) }
-L_OR { PT _ (T_OR $$) }
-L_NOT { PT _ (T_NOT $$) }
-L_EQUAL { PT _ (T_EQUAL $$) }
-L_MyLT { PT _ (T_MyLT $$) }
-L_MyGT { PT _ (T_MyGT $$) }
-L_LE { PT _ (T_LE $$) }
-L_GE { PT _ (T_GE $$) }
-L_ASSIGN { PT _ (T_ASSIGN $$) }
-L_LPAR { PT _ (T_LPAR $$) }
-L_RPAR { PT _ (T_RPAR $$) }
-L_CLPAR { PT _ (T_CLPAR $$) }
-L_CRPAR { PT _ (T_CRPAR $$) }
-L_SLPAR { PT _ (T_SLPAR $$) }
-L_SRPAR { PT _ (T_SRPAR $$) }
-L_SLASH { PT _ (T_SLASH $$) }
-L_COLON { PT _ (T_COLON $$) }
-L_SEMICOLON { PT _ (T_SEMICOLON $$) }
-L_COMMA { PT _ (T_COMMA $$) }
-L_IF { PT _ (T_IF $$) }
-L_THEN { PT _ (T_THEN $$) }
-L_WHILE { PT _ (T_WHILE $$) }
-L_DO { PT _ (T_DO $$) }
-L_READ { PT _ (T_READ $$) }
-L_ELSE { PT _ (T_ELSE $$) }
-L_BEGIN { PT _ (T_BEGIN $$) }
-L_END { PT _ (T_END $$) }
-L_CASE { PT _ (T_CASE $$) }
-L_OF { PT _ (T_OF $$) }
-L_PRINT { PT _ (T_PRINT $$) }
-L_INT { PT _ (T_INT $$) }
-L_BOOL { PT _ (T_BOOL $$) }
-L_CHAR { PT _ (T_CHAR $$) }
-L_REAL { PT _ (T_REAL $$) }
-L_VAR { PT _ (T_VAR $$) }
-L_DATA { PT _ (T_DATA $$) }
-L_SIZE { PT _ (T_SIZE $$) }
-L_FLOAT { PT _ (T_FLOAT $$) }
-L_FLOOR { PT _ (T_FLOOR $$) }
-L_CEIL { PT _ (T_CEIL $$) }
-L_FUN { PT _ (T_FUN $$) }
-L_RETURN { PT _ (T_RETURN $$) }
-L_CID { PT _ (T_CID $$) }
 L_ID { PT _ (T_ID $$) }
 L_IVAL { PT _ (T_IVAL $$) }
 L_RVAL { PT _ (T_RVAL $$) }
 L_BVAL { PT _ (T_BVAL $$) }
-L_CVAL { PT _ (T_CVAL $$) }
 
 
 %%
 
-ADD    :: { ADD} : L_ADD { ADD ($1)}
-SUB    :: { SUB} : L_SUB { SUB ($1)}
-MUL    :: { MUL} : L_MUL { MUL ($1)}
-DIV    :: { DIV} : L_DIV { DIV ($1)}
-ARROW    :: { ARROW} : L_ARROW { ARROW ($1)}
-AND    :: { AND} : L_AND { AND ($1)}
-OR    :: { OR} : L_OR { OR ($1)}
-NOT    :: { NOT} : L_NOT { NOT ($1)}
-EQUAL    :: { EQUAL} : L_EQUAL { EQUAL ($1)}
-MyLT    :: { MyLT} : L_MyLT { MyLT ($1)}
-MyGT    :: { MyGT} : L_MyGT { MyGT ($1)}
-LE    :: { LE} : L_LE { LE ($1)}
-GE    :: { GE} : L_GE { GE ($1)}
-ASSIGN    :: { ASSIGN} : L_ASSIGN { ASSIGN ($1)}
-LPAR    :: { LPAR} : L_LPAR { LPAR ($1)}
-RPAR    :: { RPAR} : L_RPAR { RPAR ($1)}
-CLPAR    :: { CLPAR} : L_CLPAR { CLPAR ($1)}
-CRPAR    :: { CRPAR} : L_CRPAR { CRPAR ($1)}
-SLPAR    :: { SLPAR} : L_SLPAR { SLPAR ($1)}
-SRPAR    :: { SRPAR} : L_SRPAR { SRPAR ($1)}
-SLASH    :: { SLASH} : L_SLASH { SLASH ($1)}
-COLON    :: { COLON} : L_COLON { COLON ($1)}
-SEMICOLON    :: { SEMICOLON} : L_SEMICOLON { SEMICOLON ($1)}
-COMMA    :: { COMMA} : L_COMMA { COMMA ($1)}
-IF    :: { IF} : L_IF { IF ($1)}
-THEN    :: { THEN} : L_THEN { THEN ($1)}
-WHILE    :: { WHILE} : L_WHILE { WHILE ($1)}
-DO    :: { DO} : L_DO { DO ($1)}
-READ    :: { READ} : L_READ { READ ($1)}
-ELSE    :: { ELSE} : L_ELSE { ELSE ($1)}
-BEGIN    :: { BEGIN} : L_BEGIN { BEGIN ($1)}
-END    :: { END} : L_END { END ($1)}
-CASE    :: { CASE} : L_CASE { CASE ($1)}
-OF    :: { OF} : L_OF { OF ($1)}
-PRINT    :: { PRINT} : L_PRINT { PRINT ($1)}
-INT    :: { INT} : L_INT { INT ($1)}
-BOOL    :: { BOOL} : L_BOOL { BOOL ($1)}
-CHAR    :: { CHAR} : L_CHAR { CHAR ($1)}
-REAL    :: { REAL} : L_REAL { REAL ($1)}
-VAR    :: { VAR} : L_VAR { VAR ($1)}
-DATA    :: { DATA} : L_DATA { DATA ($1)}
-SIZE    :: { SIZE} : L_SIZE { SIZE ($1)}
-FLOAT    :: { FLOAT} : L_FLOAT { FLOAT ($1)}
-FLOOR    :: { FLOOR} : L_FLOOR { FLOOR ($1)}
-CEIL    :: { CEIL} : L_CEIL { CEIL ($1)}
-FUN    :: { FUN} : L_FUN { FUN ($1)}
-RETURN    :: { RETURN} : L_RETURN { RETURN ($1)}
-CID    :: { CID} : L_CID { CID ($1)}
 ID    :: { ID} : L_ID { ID ($1)}
 IVAL    :: { IVAL} : L_IVAL { IVAL ($1)}
 RVAL    :: { RVAL} : L_RVAL { RVAL ($1)}
 BVAL    :: { BVAL} : L_BVAL { BVAL ($1)}
-CVAL    :: { CVAL} : L_CVAL { CVAL ($1)}
 
 Prog :: { Prog }
 Prog : Block { AbsM.ProgBlock $1 }
 Block :: { Block }
 Block : Declarations Program_Body { AbsM.Block1 $1 $2 }
 Declarations :: { Declarations }
-Declarations : Declaration SEMICOLON Declarations { AbsM.Declarations1 $1 $2 $3 }
+Declarations : Declaration ';' Declarations { AbsM.Declarations1 $1 $3 }
              | {- empty -} { AbsM.Declarations2 }
 Declaration :: { Declaration }
 Declaration : Var_Declaration { AbsM.DeclarationVar_Declaration $1 }
             | Fun_Declaration { AbsM.DeclarationFun_Declaration $1 }
-            | Data_Declaration { AbsM.DeclarationData_Declaration $1 }
 Var_Declaration :: { Var_Declaration }
-Var_Declaration : VAR Var_Specs COLON Type { AbsM.Var_Declaration1 $1 $2 $3 $4 }
-Var_Specs :: { Var_Specs }
-Var_Specs : Var_Spec More_Var_Specs { AbsM.Var_Specs1 $1 $2 }
-More_Var_Specs :: { More_Var_Specs }
-More_Var_Specs : COMMA Var_Spec More_Var_Specs { AbsM.More_Var_Specs1 $1 $2 $3 }
-               | {- empty -} { AbsM.More_Var_Specs2 }
-Var_Spec :: { Var_Spec }
-Var_Spec : ID Array_Dimensions { AbsM.Var_Spec1 $1 $2 }
-Array_Dimensions :: { Array_Dimensions }
-Array_Dimensions : SLPAR Expr SRPAR Array_Dimensions { AbsM.Array_Dimensions1 $1 $2 $3 $4 }
-                 | {- empty -} { AbsM.Array_Dimensions2 }
+Var_Declaration : 'var' ID Array_Dimensions ':' Type { AbsM.Var_Declaration1 $2 $3 $5 }
 Type :: { Type }
-Type : INT { AbsM.TypeINT $1 }
-     | REAL { AbsM.TypeREAL $1 }
-     | BOOL { AbsM.TypeBOOL $1 }
-     | CHAR { AbsM.TypeCHAR $1 }
-     | ID { AbsM.TypeID $1 }
+Type : 'int' { AbsM.Type_int }
+     | 'real' { AbsM.Type_real }
+     | 'bool' { AbsM.Type_bool }
+Array_Dimensions :: { Array_Dimensions }
+Array_Dimensions : '[' Expr ']' Array_Dimensions { AbsM.Array_Dimensions1 $2 $4 }
+                 | {- empty -} { AbsM.Array_Dimensions2 }
 Fun_Declaration :: { Fun_Declaration }
-Fun_Declaration : FUN ID Param_List COLON Type CLPAR Fun_Block CRPAR { AbsM.Fun_Declaration1 $1 $2 $3 $4 $5 $6 $7 $8 }
+Fun_Declaration : 'fun' ID Param_List ':' Type '{' Fun_Block '}' { AbsM.Fun_Declaration1 $2 $3 $5 $7 }
 Fun_Block :: { Fun_Block }
 Fun_Block : Declarations Fun_Body { AbsM.Fun_Block1 $1 $2 }
 Param_List :: { Param_List }
-Param_List : LPAR Parameters RPAR { AbsM.Param_List1 $1 $2 $3 }
+Param_List : '(' Parameters ')' { AbsM.Param_List1 $2 }
 Parameters :: { Parameters }
 Parameters : Basic_Declaration More_Parameters { AbsM.Parameters1 $1 $2 }
            | {- empty -} { AbsM.Parameters2 }
 More_Parameters :: { More_Parameters }
-More_Parameters : COMMA Basic_Declaration More_Parameters { AbsM.More_Parameters1 $1 $2 $3 }
+More_Parameters : ',' Basic_Declaration More_Parameters { AbsM.More_Parameters1 $2 $3 }
                 | {- empty -} { AbsM.More_Parameters2 }
 Basic_Declaration :: { Basic_Declaration }
-Basic_Declaration : ID Basic_Array_Dimensions COLON Type { AbsM.Basic_Declaration1 $1 $2 $3 $4 }
+Basic_Declaration : ID Basic_Array_Dimensions ':' Type { AbsM.Basic_Declaration1 $1 $2 $4 }
 Basic_Array_Dimensions :: { Basic_Array_Dimensions }
-Basic_Array_Dimensions : SLPAR SRPAR Basic_Array_Dimensions { AbsM.Basic_Array_Dimensions1 $1 $2 $3 }
+Basic_Array_Dimensions : '[' ']' Basic_Array_Dimensions { AbsM.Basic_Array_Dimensions1 $3 }
                        | {- empty -} { AbsM.Basic_Array_Dimensions2 }
-Data_Declaration :: { Data_Declaration }
-Data_Declaration : DATA ID EQUAL Cons_Declarations { AbsM.Data_Declaration1 $1 $2 $3 $4 }
-Cons_Declarations :: { Cons_Declarations }
-Cons_Declarations : Cons_Decl More_Cons_Decl { AbsM.Cons_Declarations1 $1 $2 }
-More_Cons_Decl :: { More_Cons_Decl }
-More_Cons_Decl : SLASH Cons_Decl More_Cons_Decl { AbsM.More_Cons_Decl1 $1 $2 $3 }
-               | {- empty -} { AbsM.More_Cons_Decl2 }
-Cons_Decl :: { Cons_Decl }
-Cons_Decl : CID OF Type_List { AbsM.Cons_Decl1 $1 $2 $3 }
-          | CID { AbsM.Cons_DeclCID $1 }
-Type_List :: { Type_List }
-Type_List : Type More_Type { AbsM.Type_List1 $1 $2 }
-More_Type :: { More_Type }
-More_Type : MUL Type More_Type { AbsM.More_Type1 $1 $2 $3 }
-          | {- empty -} { AbsM.More_Type2 }
 Program_Body :: { Program_Body }
-Program_Body : BEGIN Prog_Stmts END { AbsM.Program_Body1 $1 $2 $3 }
-             | Prog_Stmts { AbsM.Program_BodyProg_Stmts $1 }
+Program_Body : 'begin' Prog_Stmts 'end' { AbsM.Program_Body1 $2 }
 Fun_Body :: { Fun_Body }
-Fun_Body : BEGIN Prog_Stmts RETURN Expr SEMICOLON END { AbsM.Fun_Body1 $1 $2 $3 $4 $5 $6 }
-         | Prog_Stmts RETURN Expr SEMICOLON { AbsM.Fun_Body2 $1 $2 $3 $4 }
+Fun_Body : 'begin' Prog_Stmts 'return' Expr ';' 'end' { AbsM.Fun_Body1 $2 $4 }
 Prog_Stmts :: { Prog_Stmts }
-Prog_Stmts : Prog_Stmt SEMICOLON Prog_Stmts { AbsM.Prog_Stmts1 $1 $2 $3 }
+Prog_Stmts : Prog_Stmt ';' Prog_Stmts { AbsM.Prog_Stmts1 $1 $3 }
            | {- empty -} { AbsM.Prog_Stmts2 }
 Prog_Stmt :: { Prog_Stmt }
-Prog_Stmt : IF Expr THEN Prog_Stmt ELSE Prog_Stmt { AbsM.Prog_Stmt1 $1 $2 $3 $4 $5 $6 }
-          | WHILE Expr DO Prog_Stmt { AbsM.Prog_Stmt2 $1 $2 $3 $4 }
-          | READ Location { AbsM.Prog_Stmt3 $1 $2 }
-          | Location ASSIGN Expr { AbsM.Prog_Stmt4 $1 $2 $3 }
-          | PRINT Expr { AbsM.Prog_Stmt5 $1 $2 }
-          | CLPAR Block CRPAR { AbsM.Prog_Stmt6 $1 $2 $3 }
-          | CASE Expr OF CLPAR Case_List CRPAR { AbsM.Prog_Stmt7 $1 $2 $3 $4 $5 $6 }
-Location :: { Location }
-Location : ID Array_Dimensions { AbsM.Location1 $1 $2 }
-Case_List :: { Case_List }
-Case_List : Case More_Case { AbsM.Case_List1 $1 $2 }
-More_Case :: { More_Case }
-More_Case : SLASH Case More_Case { AbsM.More_Case1 $1 $2 $3 }
-          | {- empty -} { AbsM.More_Case2 }
-Case :: { Case }
-Case : CID Var_List ARROW Prog_Stmt { AbsM.Case1 $1 $2 $3 $4 }
-Var_List :: { Var_List }
-Var_List : LPAR Var_ListP RPAR { AbsM.Var_List1 $1 $2 $3 }
-         | {- empty -} { AbsM.Var_List2 }
-Var_ListP :: { Var_ListP }
-Var_ListP : ID More_Var_ListP { AbsM.Var_ListP1 $1 $2 }
-More_Var_ListP :: { More_Var_ListP }
-More_Var_ListP : COMMA ID More_Var_ListP { AbsM.More_Var_ListP1 $1 $2 $3 }
-               | {- empty -} { AbsM.More_Var_ListP2 }
+Prog_Stmt : 'if' Expr 'then' Prog_Stmt 'else' Prog_Stmt { AbsM.Prog_Stmt1 $2 $4 $6 }
+          | 'while' Expr 'do' Prog_Stmt { AbsM.Prog_Stmt2 $2 $4 }
+          | 'read' Identifier { AbsM.Prog_Stmt3 $2 }
+          | Identifier ':=' Expr { AbsM.Prog_Stmt4 $1 $3 }
+          | 'print' Expr { AbsM.Prog_Stmt5 $2 }
+          | '{' Block '}' { AbsM.Prog_Stmt6 $2 }
+Identifier :: { Identifier }
+Identifier : ID Array_Dimensions { AbsM.Identifier1 $1 $2 }
 Expr :: { Expr }
-Expr : Expr OR BInt_Term { AbsM.Expr1 $1 $2 $3 }
+Expr : Expr '||' BInt_Term { AbsM.Expr1 $1 $3 }
      | BInt_Term { AbsM.ExprBInt_Term $1 }
 BInt_Term :: { BInt_Term }
-BInt_Term : BInt_Term AND BInt_Factor { AbsM.BInt_Term1 $1 $2 $3 }
+BInt_Term : BInt_Term '&&' BInt_Factor { AbsM.BInt_Term1 $1 $3 }
           | BInt_Factor { AbsM.BInt_TermBInt_Factor $1 }
 BInt_Factor :: { BInt_Factor }
-BInt_Factor : NOT BInt_Factor { AbsM.BInt_Factor1 $1 $2 }
+BInt_Factor : 'not' BInt_Factor { AbsM.BInt_Factor1 $2 }
             | Int_Expr Compare_Op Int_Expr { AbsM.BInt_Factor2 $1 $2 $3 }
             | Int_Expr { AbsM.BInt_FactorInt_Expr $1 }
 Compare_Op :: { Compare_Op }
-Compare_Op : EQUAL { AbsM.Compare_OpEQUAL $1 }
-           | MyLT { AbsM.Compare_OpMyLT $1 }
-           | MyGT { AbsM.Compare_OpMyGT $1 }
-           | LE { AbsM.Compare_OpLE $1 }
-           | GE { AbsM.Compare_OpGE $1 }
+Compare_Op : '=' { AbsM.Compare_Op1 }
+           | '<' { AbsM.Compare_Op2 }
+           | '>' { AbsM.Compare_Op3 }
+           | '=<' { AbsM.Compare_Op4 }
+           | '>=' { AbsM.Compare_Op5 }
 Int_Expr :: { Int_Expr }
 Int_Expr : Int_Expr Addop Int_Term { AbsM.Int_Expr1 $1 $2 $3 }
          | Int_Term { AbsM.Int_ExprInt_Term $1 }
 Addop :: { Addop }
-Addop : ADD { AbsM.AddopADD $1 } | SUB { AbsM.AddopSUB $1 }
+Addop : '+' { AbsM.Addop1 } | '-' { AbsM.Addop2 }
 Int_Term :: { Int_Term }
 Int_Term : Int_Term Mulop Int_Factor { AbsM.Int_Term1 $1 $2 $3 }
          | Int_Factor { AbsM.Int_TermInt_Factor $1 }
 Mulop :: { Mulop }
-Mulop : MUL { AbsM.MulopMUL $1 } | DIV { AbsM.MulopDIV $1 }
+Mulop : '*' { AbsM.Mulop1 } | '/' { AbsM.Mulop2 }
 Int_Factor :: { Int_Factor }
-Int_Factor : LPAR Expr RPAR { AbsM.Int_Factor1 $1 $2 $3 }
-           | SIZE LPAR ID Basic_Array_Dimensions RPAR { AbsM.Int_Factor2 $1 $2 $3 $4 $5 }
-           | FLOAT LPAR Expr RPAR { AbsM.Int_Factor3 $1 $2 $3 $4 }
-           | FLOOR LPAR Expr RPAR { AbsM.Int_Factor4 $1 $2 $3 $4 }
-           | CEIL LPAR Expr RPAR { AbsM.Int_Factor5 $1 $2 $3 $4 }
+Int_Factor : '(' Expr ')' { AbsM.Int_Factor1 $2 }
+           | 'size' '(' ID Basic_Array_Dimensions ')' { AbsM.Int_Factor2 $3 $4 }
+           | 'float' '(' Expr ')' { AbsM.Int_Factor3 $3 }
+           | 'floor' '(' Expr ')' { AbsM.Int_Factor4 $3 }
+           | 'ceil' '(' Expr ')' { AbsM.Int_Factor5 $3 }
            | ID Modifier_List { AbsM.Int_Factor6 $1 $2 }
-           | CID Cons_Argument_List { AbsM.Int_Factor7 $1 $2 }
            | IVAL { AbsM.Int_FactorIVAL $1 }
            | RVAL { AbsM.Int_FactorRVAL $1 }
            | BVAL { AbsM.Int_FactorBVAL $1 }
-           | CVAL { AbsM.Int_FactorCVAL $1 }
-           | SUB Int_Factor { AbsM.Int_Factor8 $1 $2 }
+           | '-' Int_Factor { AbsM.Int_Factor7 $2 }
 Modifier_List :: { Modifier_List }
-Modifier_List : Fun_Argument_List { AbsM.Modifier_ListFun_Argument_List $1 }
+Modifier_List : '(' Arguments ')' { AbsM.Modifier_List1 $2 }
               | Array_Dimensions { AbsM.Modifier_ListArray_Dimensions $1 }
-Fun_Argument_List :: { Fun_Argument_List }
-Fun_Argument_List : LPAR Arguments RPAR { AbsM.Fun_Argument_List1 $1 $2 $3 }
-Cons_Argument_List :: { Cons_Argument_List }
-Cons_Argument_List : Fun_Argument_List { AbsM.Cons_Argument_ListFun_Argument_List $1 }
-                   | {- empty -} { AbsM.Cons_Argument_List1 }
 Arguments :: { Arguments }
 Arguments : Expr More_Arguments { AbsM.Arguments1 $1 $2 }
           | {- empty -} { AbsM.Arguments2 }
 More_Arguments :: { More_Arguments }
-More_Arguments : COMMA Expr More_Arguments { AbsM.More_Arguments1 $1 $2 $3 }
+More_Arguments : ',' Expr More_Arguments { AbsM.More_Arguments1 $2 $3 }
                | {- empty -} { AbsM.More_Arguments2 }
 {
 

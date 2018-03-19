@@ -7,59 +7,10 @@ module AbsM where
 
 
 
-newtype ADD = ADD String deriving (Eq, Ord, Show, Read)
-newtype SUB = SUB String deriving (Eq, Ord, Show, Read)
-newtype MUL = MUL String deriving (Eq, Ord, Show, Read)
-newtype DIV = DIV String deriving (Eq, Ord, Show, Read)
-newtype ARROW = ARROW String deriving (Eq, Ord, Show, Read)
-newtype AND = AND String deriving (Eq, Ord, Show, Read)
-newtype OR = OR String deriving (Eq, Ord, Show, Read)
-newtype NOT = NOT String deriving (Eq, Ord, Show, Read)
-newtype EQUAL = EQUAL String deriving (Eq, Ord, Show, Read)
-newtype MyLT = MyLT String deriving (Eq, Ord, Show, Read)
-newtype MyGT = MyGT String deriving (Eq, Ord, Show, Read)
-newtype LE = LE String deriving (Eq, Ord, Show, Read)
-newtype GE = GE String deriving (Eq, Ord, Show, Read)
-newtype ASSIGN = ASSIGN String deriving (Eq, Ord, Show, Read)
-newtype LPAR = LPAR String deriving (Eq, Ord, Show, Read)
-newtype RPAR = RPAR String deriving (Eq, Ord, Show, Read)
-newtype CLPAR = CLPAR String deriving (Eq, Ord, Show, Read)
-newtype CRPAR = CRPAR String deriving (Eq, Ord, Show, Read)
-newtype SLPAR = SLPAR String deriving (Eq, Ord, Show, Read)
-newtype SRPAR = SRPAR String deriving (Eq, Ord, Show, Read)
-newtype SLASH = SLASH String deriving (Eq, Ord, Show, Read)
-newtype COLON = COLON String deriving (Eq, Ord, Show, Read)
-newtype SEMICOLON = SEMICOLON String deriving (Eq, Ord, Show, Read)
-newtype COMMA = COMMA String deriving (Eq, Ord, Show, Read)
-newtype IF = IF String deriving (Eq, Ord, Show, Read)
-newtype THEN = THEN String deriving (Eq, Ord, Show, Read)
-newtype WHILE = WHILE String deriving (Eq, Ord, Show, Read)
-newtype DO = DO String deriving (Eq, Ord, Show, Read)
-newtype READ = READ String deriving (Eq, Ord, Show, Read)
-newtype ELSE = ELSE String deriving (Eq, Ord, Show, Read)
-newtype BEGIN = BEGIN String deriving (Eq, Ord, Show, Read)
-newtype END = END String deriving (Eq, Ord, Show, Read)
-newtype CASE = CASE String deriving (Eq, Ord, Show, Read)
-newtype OF = OF String deriving (Eq, Ord, Show, Read)
-newtype PRINT = PRINT String deriving (Eq, Ord, Show, Read)
-newtype INT = INT String deriving (Eq, Ord, Show, Read)
-newtype BOOL = BOOL String deriving (Eq, Ord, Show, Read)
-newtype CHAR = CHAR String deriving (Eq, Ord, Show, Read)
-newtype REAL = REAL String deriving (Eq, Ord, Show, Read)
-newtype VAR = VAR String deriving (Eq, Ord, Show, Read)
-newtype DATA = DATA String deriving (Eq, Ord, Show, Read)
-newtype SIZE = SIZE String deriving (Eq, Ord, Show, Read)
-newtype FLOAT = FLOAT String deriving (Eq, Ord, Show, Read)
-newtype FLOOR = FLOOR String deriving (Eq, Ord, Show, Read)
-newtype CEIL = CEIL String deriving (Eq, Ord, Show, Read)
-newtype FUN = FUN String deriving (Eq, Ord, Show, Read)
-newtype RETURN = RETURN String deriving (Eq, Ord, Show, Read)
-newtype CID = CID String deriving (Eq, Ord, Show, Read)
 newtype ID = ID String deriving (Eq, Ord, Show, Read)
 newtype IVAL = IVAL String deriving (Eq, Ord, Show, Read)
 newtype RVAL = RVAL String deriving (Eq, Ord, Show, Read)
 newtype BVAL = BVAL String deriving (Eq, Ord, Show, Read)
-newtype CVAL = CVAL String deriving (Eq, Ord, Show, Read)
 data Prog = ProgBlock Block
   deriving (Eq, Ord, Show, Read)
 
@@ -67,49 +18,32 @@ data Block = Block1 Declarations Program_Body
   deriving (Eq, Ord, Show, Read)
 
 data Declarations
-    = Declarations1 Declaration SEMICOLON Declarations | Declarations2
+    = Declarations1 Declaration Declarations | Declarations2
   deriving (Eq, Ord, Show, Read)
 
 data Declaration
     = DeclarationVar_Declaration Var_Declaration
     | DeclarationFun_Declaration Fun_Declaration
-    | DeclarationData_Declaration Data_Declaration
   deriving (Eq, Ord, Show, Read)
 
-data Var_Declaration = Var_Declaration1 VAR Var_Specs COLON Type
+data Var_Declaration = Var_Declaration1 ID Array_Dimensions Type
   deriving (Eq, Ord, Show, Read)
 
-data Var_Specs = Var_Specs1 Var_Spec More_Var_Specs
-  deriving (Eq, Ord, Show, Read)
-
-data More_Var_Specs
-    = More_Var_Specs1 COMMA Var_Spec More_Var_Specs | More_Var_Specs2
-  deriving (Eq, Ord, Show, Read)
-
-data Var_Spec = Var_Spec1 ID Array_Dimensions
+data Type = Type_int | Type_real | Type_bool
   deriving (Eq, Ord, Show, Read)
 
 data Array_Dimensions
-    = Array_Dimensions1 SLPAR Expr SRPAR Array_Dimensions
-    | Array_Dimensions2
-  deriving (Eq, Ord, Show, Read)
-
-data Type
-    = TypeINT INT
-    | TypeREAL REAL
-    | TypeBOOL BOOL
-    | TypeCHAR CHAR
-    | TypeID ID
+    = Array_Dimensions1 Expr Array_Dimensions | Array_Dimensions2
   deriving (Eq, Ord, Show, Read)
 
 data Fun_Declaration
-    = Fun_Declaration1 FUN ID Param_List COLON Type CLPAR Fun_Block CRPAR
+    = Fun_Declaration1 ID Param_List Type Fun_Block
   deriving (Eq, Ord, Show, Read)
 
 data Fun_Block = Fun_Block1 Declarations Fun_Body
   deriving (Eq, Ord, Show, Read)
 
-data Param_List = Param_List1 LPAR Parameters RPAR
+data Param_List = Param_List1 Parameters
   deriving (Eq, Ord, Show, Read)
 
 data Parameters
@@ -117,113 +51,67 @@ data Parameters
   deriving (Eq, Ord, Show, Read)
 
 data More_Parameters
-    = More_Parameters1 COMMA Basic_Declaration More_Parameters
+    = More_Parameters1 Basic_Declaration More_Parameters
     | More_Parameters2
   deriving (Eq, Ord, Show, Read)
 
 data Basic_Declaration
-    = Basic_Declaration1 ID Basic_Array_Dimensions COLON Type
+    = Basic_Declaration1 ID Basic_Array_Dimensions Type
   deriving (Eq, Ord, Show, Read)
 
 data Basic_Array_Dimensions
-    = Basic_Array_Dimensions1 SLPAR SRPAR Basic_Array_Dimensions
+    = Basic_Array_Dimensions1 Basic_Array_Dimensions
     | Basic_Array_Dimensions2
   deriving (Eq, Ord, Show, Read)
 
-data Data_Declaration
-    = Data_Declaration1 DATA ID EQUAL Cons_Declarations
+data Program_Body = Program_Body1 Prog_Stmts
   deriving (Eq, Ord, Show, Read)
 
-data Cons_Declarations
-    = Cons_Declarations1 Cons_Decl More_Cons_Decl
+data Fun_Body = Fun_Body1 Prog_Stmts Expr
   deriving (Eq, Ord, Show, Read)
 
-data More_Cons_Decl
-    = More_Cons_Decl1 SLASH Cons_Decl More_Cons_Decl | More_Cons_Decl2
-  deriving (Eq, Ord, Show, Read)
-
-data Cons_Decl = Cons_Decl1 CID OF Type_List | Cons_DeclCID CID
-  deriving (Eq, Ord, Show, Read)
-
-data Type_List = Type_List1 Type More_Type
-  deriving (Eq, Ord, Show, Read)
-
-data More_Type = More_Type1 MUL Type More_Type | More_Type2
-  deriving (Eq, Ord, Show, Read)
-
-data Program_Body
-    = Program_Body1 BEGIN Prog_Stmts END
-    | Program_BodyProg_Stmts Prog_Stmts
-  deriving (Eq, Ord, Show, Read)
-
-data Fun_Body
-    = Fun_Body1 BEGIN Prog_Stmts RETURN Expr SEMICOLON END
-    | Fun_Body2 Prog_Stmts RETURN Expr SEMICOLON
-  deriving (Eq, Ord, Show, Read)
-
-data Prog_Stmts
-    = Prog_Stmts1 Prog_Stmt SEMICOLON Prog_Stmts | Prog_Stmts2
+data Prog_Stmts = Prog_Stmts1 Prog_Stmt Prog_Stmts | Prog_Stmts2
   deriving (Eq, Ord, Show, Read)
 
 data Prog_Stmt
-    = Prog_Stmt1 IF Expr THEN Prog_Stmt ELSE Prog_Stmt
-    | Prog_Stmt2 WHILE Expr DO Prog_Stmt
-    | Prog_Stmt3 READ Location
-    | Prog_Stmt4 Location ASSIGN Expr
-    | Prog_Stmt5 PRINT Expr
-    | Prog_Stmt6 CLPAR Block CRPAR
-    | Prog_Stmt7 CASE Expr OF CLPAR Case_List CRPAR
+    = Prog_Stmt1 Expr Prog_Stmt Prog_Stmt
+    | Prog_Stmt2 Expr Prog_Stmt
+    | Prog_Stmt3 Identifier
+    | Prog_Stmt4 Identifier Expr
+    | Prog_Stmt5 Expr
+    | Prog_Stmt6 Block
   deriving (Eq, Ord, Show, Read)
 
-data Location = Location1 ID Array_Dimensions
+data Identifier = Identifier1 ID Array_Dimensions
   deriving (Eq, Ord, Show, Read)
 
-data Case_List = Case_List1 Case More_Case
-  deriving (Eq, Ord, Show, Read)
-
-data More_Case = More_Case1 SLASH Case More_Case | More_Case2
-  deriving (Eq, Ord, Show, Read)
-
-data Case = Case1 CID Var_List ARROW Prog_Stmt
-  deriving (Eq, Ord, Show, Read)
-
-data Var_List = Var_List1 LPAR Var_ListP RPAR | Var_List2
-  deriving (Eq, Ord, Show, Read)
-
-data Var_ListP = Var_ListP1 ID More_Var_ListP
-  deriving (Eq, Ord, Show, Read)
-
-data More_Var_ListP
-    = More_Var_ListP1 COMMA ID More_Var_ListP | More_Var_ListP2
-  deriving (Eq, Ord, Show, Read)
-
-data Expr = Expr1 Expr OR BInt_Term | ExprBInt_Term BInt_Term
+data Expr = Expr1 Expr BInt_Term | ExprBInt_Term BInt_Term
   deriving (Eq, Ord, Show, Read)
 
 data BInt_Term
-    = BInt_Term1 BInt_Term AND BInt_Factor
+    = BInt_Term1 BInt_Term BInt_Factor
     | BInt_TermBInt_Factor BInt_Factor
   deriving (Eq, Ord, Show, Read)
 
 data BInt_Factor
-    = BInt_Factor1 NOT BInt_Factor
+    = BInt_Factor1 BInt_Factor
     | BInt_Factor2 Int_Expr Compare_Op Int_Expr
     | BInt_FactorInt_Expr Int_Expr
   deriving (Eq, Ord, Show, Read)
 
 data Compare_Op
-    = Compare_OpEQUAL EQUAL
-    | Compare_OpMyLT MyLT
-    | Compare_OpMyGT MyGT
-    | Compare_OpLE LE
-    | Compare_OpGE GE
+    = Compare_Op1
+    | Compare_Op2
+    | Compare_Op3
+    | Compare_Op4
+    | Compare_Op5
   deriving (Eq, Ord, Show, Read)
 
 data Int_Expr
     = Int_Expr1 Int_Expr Addop Int_Term | Int_ExprInt_Term Int_Term
   deriving (Eq, Ord, Show, Read)
 
-data Addop = AddopADD ADD | AddopSUB SUB
+data Addop = Addop1 | Addop2
   deriving (Eq, Ord, Show, Read)
 
 data Int_Term
@@ -231,41 +119,31 @@ data Int_Term
     | Int_TermInt_Factor Int_Factor
   deriving (Eq, Ord, Show, Read)
 
-data Mulop = MulopMUL MUL | MulopDIV DIV
+data Mulop = Mulop1 | Mulop2
   deriving (Eq, Ord, Show, Read)
 
 data Int_Factor
-    = Int_Factor1 LPAR Expr RPAR
-    | Int_Factor2 SIZE LPAR ID Basic_Array_Dimensions RPAR
-    | Int_Factor3 FLOAT LPAR Expr RPAR
-    | Int_Factor4 FLOOR LPAR Expr RPAR
-    | Int_Factor5 CEIL LPAR Expr RPAR
+    = Int_Factor1 Expr
+    | Int_Factor2 ID Basic_Array_Dimensions
+    | Int_Factor3 Expr
+    | Int_Factor4 Expr
+    | Int_Factor5 Expr
     | Int_Factor6 ID Modifier_List
-    | Int_Factor7 CID Cons_Argument_List
     | Int_FactorIVAL IVAL
     | Int_FactorRVAL RVAL
     | Int_FactorBVAL BVAL
-    | Int_FactorCVAL CVAL
-    | Int_Factor8 SUB Int_Factor
+    | Int_Factor7 Int_Factor
   deriving (Eq, Ord, Show, Read)
 
 data Modifier_List
-    = Modifier_ListFun_Argument_List Fun_Argument_List
+    = Modifier_List1 Arguments
     | Modifier_ListArray_Dimensions Array_Dimensions
-  deriving (Eq, Ord, Show, Read)
-
-data Fun_Argument_List = Fun_Argument_List1 LPAR Arguments RPAR
-  deriving (Eq, Ord, Show, Read)
-
-data Cons_Argument_List
-    = Cons_Argument_ListFun_Argument_List Fun_Argument_List
-    | Cons_Argument_List1
   deriving (Eq, Ord, Show, Read)
 
 data Arguments = Arguments1 Expr More_Arguments | Arguments2
   deriving (Eq, Ord, Show, Read)
 
 data More_Arguments
-    = More_Arguments1 COMMA Expr More_Arguments | More_Arguments2
+    = More_Arguments1 Expr More_Arguments | More_Arguments2
   deriving (Eq, Ord, Show, Read)
 

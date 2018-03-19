@@ -4,157 +4,11 @@ module SkelM where
 
 import AbsM
 import ErrM
-import AST  --Added
-
 type Result = Err String
 
 failure :: Show a => a -> Result
 failure x = Bad $ "Undefined case: " ++ show x
 
-transADD :: ADD -> Result
-transADD x = case x of
-  ADD string -> failure x
-transSUB :: SUB -> Result
-transSUB x = case x of
-  SUB string -> failure x
-transMUL :: MUL -> Result
-transMUL x = case x of
-  MUL string -> failure x
-transDIV :: DIV -> Result
-transDIV x = case x of
-  DIV string -> failure x
-transARROW :: ARROW -> Result
-transARROW x = case x of
-  ARROW string -> failure x
-transAND :: AND -> Result
-transAND x = case x of
-  AND string -> failure x
-transOR :: OR -> Result
-transOR x = case x of
-  OR string -> failure x
-transNOT :: NOT -> Result
-transNOT x = case x of
-  NOT string -> failure x
-transEQUAL :: EQUAL -> Result
-transEQUAL x = case x of
-  EQUAL string -> failure x
-transMyLT :: MyLT -> Result
-transMyLT x = case x of
-  MyLT string -> failure x
-transMyGT :: MyGT -> Result
-transMyGT x = case x of
-  MyGT string -> failure x
-transLE :: LE -> Result
-transLE x = case x of
-  LE string -> failure x
-transGE :: GE -> Result
-transGE x = case x of
-  GE string -> failure x
-transASSIGN :: ASSIGN -> Result
-transASSIGN x = case x of
-  ASSIGN string -> failure x
-transLPAR :: LPAR -> Result
-transLPAR x = case x of
-  LPAR string -> failure x
-transRPAR :: RPAR -> Result
-transRPAR x = case x of
-  RPAR string -> failure x
-transCLPAR :: CLPAR -> Result
-transCLPAR x = case x of
-  CLPAR string -> failure x
-transCRPAR :: CRPAR -> Result
-transCRPAR x = case x of
-  CRPAR string -> failure x
-transSLPAR :: SLPAR -> Result
-transSLPAR x = case x of
-  SLPAR string -> failure x
-transSRPAR :: SRPAR -> Result
-transSRPAR x = case x of
-  SRPAR string -> failure x
-transSLASH :: SLASH -> Result
-transSLASH x = case x of
-  SLASH string -> failure x
-transCOLON :: COLON -> Result
-transCOLON x = case x of
-  COLON string -> failure x
-transSEMICOLON :: SEMICOLON -> Result
-transSEMICOLON x = case x of
-  SEMICOLON string -> failure x
-transCOMMA :: COMMA -> Result
-transCOMMA x = case x of
-  COMMA string -> failure x
-transIF :: IF -> Result
-transIF x = case x of
-  IF string -> failure x
-transTHEN :: THEN -> Result
-transTHEN x = case x of
-  THEN string -> failure x
-transWHILE :: WHILE -> Result
-transWHILE x = case x of
-  WHILE string -> failure x
-transDO :: DO -> Result
-transDO x = case x of
-  DO string -> failure x
-transREAD :: READ -> Result
-transREAD x = case x of
-  READ string -> failure x
-transELSE :: ELSE -> Result
-transELSE x = case x of
-  ELSE string -> failure x
-transBEGIN :: BEGIN -> Result
-transBEGIN x = case x of
-  BEGIN string -> failure x
-transEND :: END -> Result
-transEND x = case x of
-  END string -> failure x
-transCASE :: CASE -> Result
-transCASE x = case x of
-  CASE string -> failure x
-transOF :: OF -> Result
-transOF x = case x of
-  OF string -> failure x
-transPRINT :: PRINT -> Result
-transPRINT x = case x of
-  PRINT string -> failure x
-transINT :: INT -> Result
-transINT x = case x of
-  INT string -> failure x
-transBOOL :: BOOL -> Result
-transBOOL x = case x of
-  BOOL string -> failure x
-transCHAR :: CHAR -> Result
-transCHAR x = case x of
-  CHAR string -> failure x
-transREAL :: REAL -> Result
-transREAL x = case x of
-  REAL string -> failure x
-transVAR :: VAR -> Result
-transVAR x = case x of
-  VAR string -> failure x
-transDATA :: DATA -> Result
-transDATA x = case x of
-  DATA string -> failure x
-transSIZE :: SIZE -> Result
-transSIZE x = case x of
-  SIZE string -> failure x
-transFLOAT :: FLOAT -> Result
-transFLOAT x = case x of
-  FLOAT string -> failure x
-transFLOOR :: FLOOR -> Result
-transFLOOR x = case x of
-  FLOOR string -> failure x
-transCEIL :: CEIL -> Result
-transCEIL x = case x of
-  CEIL string -> failure x
-transFUN :: FUN -> Result
-transFUN x = case x of
-  FUN string -> failure x
-transRETURN :: RETURN -> Result
-transRETURN x = case x of
-  RETURN string -> failure x
-transCID :: CID -> Result
-transCID x = case x of
-  CID string -> failure x
 transID :: ID -> Result
 transID x = case x of
   ID string -> failure x
@@ -167,9 +21,6 @@ transRVAL x = case x of
 transBVAL :: BVAL -> Result
 transBVAL x = case x of
   BVAL string -> failure x
-transCVAL :: CVAL -> Result
-transCVAL x = case x of
-  CVAL string -> failure x
 transProg :: Prog -> Result
 transProg x = case x of
   ProgBlock block -> failure x
@@ -178,194 +29,127 @@ transBlock x = case x of
   Block1 declarations programbody -> failure x
 transDeclarations :: Declarations -> Result
 transDeclarations x = case x of
-  Declarations1 declaration semicolon declarations -> failure x
+  Declarations1 declaration declarations -> failure x
   Declarations2 -> failure x
 transDeclaration :: Declaration -> Result
 transDeclaration x = case x of
   DeclarationVar_Declaration vardeclaration -> failure x
   DeclarationFun_Declaration fundeclaration -> failure x
-  DeclarationData_Declaration datadeclaration -> failure x
 transVar_Declaration :: Var_Declaration -> Result
 transVar_Declaration x = case x of
-  Var_Declaration1 var varspecs colon type_ -> failure x
-transVar_Specs :: Var_Specs -> Result
-transVar_Specs x = case x of
-  Var_Specs1 varspec morevarspecs -> failure x
-transMore_Var_Specs :: More_Var_Specs -> Result
-transMore_Var_Specs x = case x of
-  More_Var_Specs1 comma varspec morevarspecs -> failure x
-  More_Var_Specs2 -> failure x
-transVar_Spec :: Var_Spec -> Result
-transVar_Spec x = case x of
-  Var_Spec1 id arraydimensions -> failure x
-transArray_Dimensions :: Array_Dimensions -> Result
-transArray_Dimensions x = case x of
-  Array_Dimensions1 slpar expr srpar arraydimensions -> failure x
-  Array_Dimensions2 -> failure x
+  Var_Declaration1 id arraydimensions type_ -> failure x
 transType :: Type -> Result
 transType x = case x of
-  TypeINT int -> failure x
-  TypeREAL real -> failure x
-  TypeBOOL bool -> failure x
-  TypeCHAR char -> failure x
-  TypeID id -> failure x
+  Type_int -> failure x
+  Type_real -> failure x
+  Type_bool -> failure x
+transArray_Dimensions :: Array_Dimensions -> Result
+transArray_Dimensions x = case x of
+  Array_Dimensions1 expr arraydimensions -> failure x
+  Array_Dimensions2 -> failure x
 transFun_Declaration :: Fun_Declaration -> Result
 transFun_Declaration x = case x of
-  Fun_Declaration1 fun id paramlist colon type_ clpar funblock crpar -> failure x
+  Fun_Declaration1 id paramlist type_ funblock -> failure x
 transFun_Block :: Fun_Block -> Result
 transFun_Block x = case x of
   Fun_Block1 declarations funbody -> failure x
 transParam_List :: Param_List -> Result
 transParam_List x = case x of
-  Param_List1 lpar parameters rpar -> failure x
+  Param_List1 parameters -> failure x
 transParameters :: Parameters -> Result
 transParameters x = case x of
   Parameters1 basicdeclaration moreparameters -> failure x
   Parameters2 -> failure x
 transMore_Parameters :: More_Parameters -> Result
 transMore_Parameters x = case x of
-  More_Parameters1 comma basicdeclaration moreparameters -> failure x
+  More_Parameters1 basicdeclaration moreparameters -> failure x
   More_Parameters2 -> failure x
 transBasic_Declaration :: Basic_Declaration -> Result
 transBasic_Declaration x = case x of
-  Basic_Declaration1 id basicarraydimensions colon type_ -> failure x
+  Basic_Declaration1 id basicarraydimensions type_ -> failure x
 transBasic_Array_Dimensions :: Basic_Array_Dimensions -> Result
 transBasic_Array_Dimensions x = case x of
-  Basic_Array_Dimensions1 slpar srpar basicarraydimensions -> failure x
+  Basic_Array_Dimensions1 basicarraydimensions -> failure x
   Basic_Array_Dimensions2 -> failure x
-transData_Declaration :: Data_Declaration -> Result
-transData_Declaration x = case x of
-  Data_Declaration1 data_ id equal consdeclarations -> failure x
-transCons_Declarations :: Cons_Declarations -> Result
-transCons_Declarations x = case x of
-  Cons_Declarations1 consdecl moreconsdecl -> failure x
-transMore_Cons_Decl :: More_Cons_Decl -> Result
-transMore_Cons_Decl x = case x of
-  More_Cons_Decl1 slash consdecl moreconsdecl -> failure x
-  More_Cons_Decl2 -> failure x
-transCons_Decl :: Cons_Decl -> Result
-transCons_Decl x = case x of
-  Cons_Decl1 cid of_ typelist -> failure x
-  Cons_DeclCID cid -> failure x
-transType_List :: Type_List -> Result
-transType_List x = case x of
-  Type_List1 type_ moretype -> failure x
-transMore_Type :: More_Type -> Result
-transMore_Type x = case x of
-  More_Type1 mul type_ moretype -> failure x
-  More_Type2 -> failure x
 transProgram_Body :: Program_Body -> Result
 transProgram_Body x = case x of
-  Program_Body1 begin progstmts end -> failure x
-  Program_BodyProg_Stmts progstmts -> failure x
+  Program_Body1 progstmts -> failure x
 transFun_Body :: Fun_Body -> Result
 transFun_Body x = case x of
-  Fun_Body1 begin progstmts return expr semicolon end -> failure x
-  Fun_Body2 progstmts return expr semicolon -> failure x
+  Fun_Body1 progstmts expr -> failure x
 transProg_Stmts :: Prog_Stmts -> Result
 transProg_Stmts x = case x of
-  Prog_Stmts1 progstmt semicolon progstmts -> failure x
+  Prog_Stmts1 progstmt progstmts -> failure x
   Prog_Stmts2 -> failure x
 transProg_Stmt :: Prog_Stmt -> Result
 transProg_Stmt x = case x of
-  Prog_Stmt1 if_ expr then_ progstmt1 else_ progstmt2 -> failure x
-  Prog_Stmt2 while expr do_ progstmt -> failure x
-  Prog_Stmt3 read location -> failure x
-  Prog_Stmt4 location assign expr -> failure x
-  Prog_Stmt5 print expr -> failure x
-  Prog_Stmt6 clpar block crpar -> failure x
-  Prog_Stmt7 case_ expr of_ clpar caselist crpar -> failure x
-transLocation :: Location -> Result
-transLocation x = case x of
-  Location1 id arraydimensions -> failure x
-transCase_List :: Case_List -> Result
-transCase_List x = case x of
-  Case_List1 case_ morecase -> failure x
-transMore_Case :: More_Case -> Result
-transMore_Case x = case x of
-  More_Case1 slash case_ morecase -> failure x
-  More_Case2 -> failure x
-transCase :: Case -> Result
-transCase x = case x of
-  Case1 cid varlist arrow progstmt -> failure x
-transVar_List :: Var_List -> Result
-transVar_List x = case x of
-  Var_List1 lpar varlistp rpar -> failure x
-  Var_List2 -> failure x
-transVar_ListP :: Var_ListP -> Result
-transVar_ListP x = case x of
-  Var_ListP1 id morevarlistp -> failure x
-transMore_Var_ListP :: More_Var_ListP -> Result
-transMore_Var_ListP x = case x of
-  More_Var_ListP1 comma id morevarlistp -> failure x
-  More_Var_ListP2 -> failure x
+  Prog_Stmt1 expr progstmt1 progstmt2 -> failure x
+  Prog_Stmt2 expr progstmt -> failure x
+  Prog_Stmt3 identifier -> failure x
+  Prog_Stmt4 identifier expr -> failure x
+  Prog_Stmt5 expr -> failure x
+  Prog_Stmt6 block -> failure x
+transIdentifier :: Identifier -> Result
+transIdentifier x = case x of
+  Identifier1 id arraydimensions -> failure x
 transExpr :: Expr -> Result
 transExpr x = case x of
-  Expr1 expr or bintterm -> failure x
+  Expr1 expr bintterm -> failure x
   ExprBInt_Term bintterm -> failure x
 transBInt_Term :: BInt_Term -> Result
 transBInt_Term x = case x of
-  BInt_Term1 bintterm and bintfactor -> failure x
+  BInt_Term1 bintterm bintfactor -> failure x
   BInt_TermBInt_Factor bintfactor -> failure x
 transBInt_Factor :: BInt_Factor -> Result
 transBInt_Factor x = case x of
-  BInt_Factor1 not bintfactor -> failure x
+  BInt_Factor1 bintfactor -> failure x
   BInt_Factor2 intexpr1 compareop intexpr2 -> failure x
   BInt_FactorInt_Expr intexpr -> failure x
 transCompare_Op :: Compare_Op -> Result
 transCompare_Op x = case x of
-  Compare_OpEQUAL equal -> failure x
-  Compare_OpMyLT mylt -> failure x
-  Compare_OpMyGT mygt -> failure x
-  Compare_OpLE le -> failure x
-  Compare_OpGE ge -> failure x
+  Compare_Op1 -> failure x
+  Compare_Op2 -> failure x
+  Compare_Op3 -> failure x
+  Compare_Op4 -> failure x
+  Compare_Op5 -> failure x
 transInt_Expr :: Int_Expr -> Result
 transInt_Expr x = case x of
   Int_Expr1 intexpr addop intterm -> failure x
   Int_ExprInt_Term intterm -> failure x
 transAddop :: Addop -> Result
 transAddop x = case x of
-  AddopADD add -> failure x
-  AddopSUB sub -> failure x
+  Addop1 -> failure x
+  Addop2 -> failure x
 transInt_Term :: Int_Term -> Result
 transInt_Term x = case x of
   Int_Term1 intterm mulop intfactor -> failure x
   Int_TermInt_Factor intfactor -> failure x
 transMulop :: Mulop -> Result
 transMulop x = case x of
-  MulopMUL mul -> failure x
-  MulopDIV div -> failure x
+  Mulop1 -> failure x
+  Mulop2 -> failure x
 transInt_Factor :: Int_Factor -> Result
 transInt_Factor x = case x of
-  Int_Factor1 lpar expr rpar -> failure x
-  Int_Factor2 size lpar id basicarraydimensions rpar -> failure x
-  Int_Factor3 float lpar expr rpar -> failure x
-  Int_Factor4 floor lpar expr rpar -> failure x
-  Int_Factor5 ceil lpar expr rpar -> failure x
+  Int_Factor1 expr -> failure x
+  Int_Factor2 id basicarraydimensions -> failure x
+  Int_Factor3 expr -> failure x
+  Int_Factor4 expr -> failure x
+  Int_Factor5 expr -> failure x
   Int_Factor6 id modifierlist -> failure x
-  Int_Factor7 cid consargumentlist -> failure x
   Int_FactorIVAL ival -> failure x
   Int_FactorRVAL rval -> failure x
   Int_FactorBVAL bval -> failure x
-  Int_FactorCVAL cval -> failure x
-  Int_Factor8 sub intfactor -> failure x
+  Int_Factor7 intfactor -> failure x
 transModifier_List :: Modifier_List -> Result
 transModifier_List x = case x of
-  Modifier_ListFun_Argument_List funargumentlist -> failure x
+  Modifier_List1 arguments -> failure x
   Modifier_ListArray_Dimensions arraydimensions -> failure x
-transFun_Argument_List :: Fun_Argument_List -> Result
-transFun_Argument_List x = case x of
-  Fun_Argument_List1 lpar arguments rpar -> failure x
-transCons_Argument_List :: Cons_Argument_List -> Result
-transCons_Argument_List x = case x of
-  Cons_Argument_ListFun_Argument_List funargumentlist -> failure x
-  Cons_Argument_List1 -> failure x
 transArguments :: Arguments -> Result
 transArguments x = case x of
   Arguments1 expr morearguments -> failure x
   Arguments2 -> failure x
 transMore_Arguments :: More_Arguments -> Result
 transMore_Arguments x = case x of
-  More_Arguments1 comma expr morearguments -> failure x
+  More_Arguments1 expr morearguments -> failure x
   More_Arguments2 -> failure x
 

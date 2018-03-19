@@ -1,209 +1,106 @@
-rules  Prog ::= Block ;
+rules Prog ::= Block ;
 
-rules  Block ::= Declarations Program_Body ;
+rules Block ::= Declarations Program_Body ;
 
-rules Declarations ::= Declaration SEMICOLON Declarations
-    |;
+rules Declarations ::= Declaration ";" Declarations
+                     |;
 
-rules  Declaration ::= Var_Declaration
-    | Fun_Declaration
-    | Data_Declaration ;
+rules Declaration ::= Var_Declaration
+                    | Fun_Declaration ;
 
-rules  Var_Declaration ::= VAR Var_Specs COLON Type ;
+rules Var_Declaration ::= "var" ID Array_Dimensions ":" Type ;
 
-rules  Var_Specs ::= Var_Spec More_Var_Specs ;
+rules Type ::= "int"
+    | "real"
+    | "bool" ;
 
-rules  More_Var_Specs ::= COMMA Var_Spec More_Var_Specs
-    | ;
+rules Array_Dimensions ::= "[" Expr "]" Array_Dimensions
+                         | ;
 
-rules Var_Spec ::= ID Array_Dimensions ;
-
-rules  Array_Dimensions ::= SLPAR Expr SRPAR Array_Dimensions
-    | ;
-
-rules Type ::= INT
-    | REAL
-    | BOOL
-    | CHAR
-    | ID ;
-
-rules Fun_Declaration ::= FUN ID Param_List COLON Type CLPAR Fun_Block CRPAR ;
+rules Fun_Declaration ::= "fun" ID Param_List ":" Type "{" Fun_Block "}" ;
 
 rules Fun_Block ::= Declarations Fun_Body ;
 
-rules Param_List ::= LPAR Parameters RPAR ;
+rules Param_List ::= "(" Parameters ")" ;
 
 rules Parameters ::= Basic_Declaration More_Parameters
-    | ;
+                   | ;
 
-rules More_Parameters ::= COMMA Basic_Declaration More_Parameters
-    | ;
+rules More_Parameters ::= "," Basic_Declaration More_Parameters
+                        | ;
 
-rules Basic_Declaration ::= ID Basic_Array_Dimensions COLON Type ;
+rules Basic_Declaration ::= ID Basic_Array_Dimensions ":" Type ;
 
-rules Basic_Array_Dimensions ::= SLPAR SRPAR Basic_Array_Dimensions
-    | ;
+rules Basic_Array_Dimensions ::= "[" "]" Basic_Array_Dimensions
+                               | ;
 
-rules Data_Declaration ::= DATA ID EQUAL Cons_Declarations ;
+rules Program_Body ::= "begin" Prog_Stmts "end" ;
 
-rules Cons_Declarations ::= Cons_Decl More_Cons_Decl ;
+rules Fun_Body ::= "begin" Prog_Stmts "return" Expr ";" "end" ;
 
-rules More_Cons_Decl ::= SLASH Cons_Decl More_Cons_Decl
-    | ;
+rules Prog_Stmts ::= Prog_Stmt ";" Prog_Stmts
+                   | ;
 
-rules Cons_Decl ::= CID OF Type_List
-    | CID ;
+rules Prog_Stmt ::= "if" Expr "then" Prog_Stmt "else" Prog_Stmt 
+                  | "while" Expr "do" Prog_Stmt 
+                  | "read" Identifier
+                  | Identifier ":=" Expr 
+                  | "print" Expr 
+                  | "{" Block "}" ;
 
-rules Type_List ::= Type More_Type ;
+rules Identifier ::= ID Array_Dimensions ;
 
-rules More_Type ::= MUL Type More_Type
-    | ;
+rules Expr ::= Expr "||" BInt_Term
+             | BInt_Term ;
 
-rules Program_Body ::= BEGIN Prog_Stmts END
-    | Prog_Stmts ;
+rules BInt_Term ::= BInt_Term "&&" BInt_Factor
+                  | BInt_Factor ;
 
-rules Fun_Body ::= BEGIN Prog_Stmts RETURN Expr SEMICOLON END
-    | Prog_Stmts RETURN Expr SEMICOLON ;
+rules BInt_Factor ::= "not" BInt_Factor
+                    | Int_Expr Compare_Op Int_Expr
+                    | Int_Expr ;
 
-rules Prog_Stmts ::= Prog_Stmt SEMICOLON Prog_Stmts
-    | ;
-
-rules Prog_Stmt ::= IF Expr THEN Prog_Stmt ELSE Prog_Stmt 
-    | WHILE Expr DO Prog_Stmt 
-    | READ Location 
-    | Location ASSIGN Expr 
-    | PRINT Expr 
-    | CLPAR Block CRPAR
-    | CASE Expr OF CLPAR Case_List CRPAR ;
-
-rules Location ::= ID Array_Dimensions ;
-
-rules Case_List ::= Case More_Case ;
-
-rules More_Case ::= SLASH Case More_Case
-    | ;
-
-rules Case ::= CID Var_List ARROW Prog_Stmt ;
-
-rules Var_List ::= LPAR Var_ListP RPAR
-    | ;
-
-rules Var_ListP ::= ID More_Var_ListP ;
-
-rules More_Var_ListP ::= COMMA ID More_Var_ListP
-    | ;
-
-rules Expr ::= Expr OR BInt_Term
-    | BInt_Term ;
-
-rules BInt_Term ::= BInt_Term AND BInt_Factor
-    | BInt_Factor ;
-
-rules BInt_Factor ::= NOT BInt_Factor
-    | Int_Expr Compare_Op Int_Expr
-    | Int_Expr ;
-
-rules Compare_Op ::= EQUAL
-    | MyLT
-    | MyGT
-    | LE
-    | GE ;
+rules Compare_Op ::= "="
+                   | "<"
+                   | ">"
+                   | "=<"
+                   | ">=" ;
 
 rules Int_Expr ::= Int_Expr Addop Int_Term
-    | Int_Term ;
+                 | Int_Term ;
 
-rules Addop ::= ADD
-    | SUB ;
+rules Addop ::= "+"
+              | "-" ;
 
 rules Int_Term ::= Int_Term Mulop Int_Factor 
-    | Int_Factor ;
+                 | Int_Factor ;
 
-rules Mulop ::= MUL 
-    | DIV ;
+rules Mulop ::= "*" 
+              | "/" ;
 
-rules Int_Factor ::= LPAR Expr RPAR 
-    | SIZE LPAR ID Basic_Array_Dimensions RPAR 
-    | FLOAT LPAR Expr RPAR 
-    | FLOOR LPAR Expr RPAR 
-    | CEIL LPAR Expr RPAR 
-    | ID Modifier_List 
-    | CID Cons_Argument_List 
-    | IVAL 
-    | RVAL 
-    | BVAL 
-    | CVAL 
-    | SUB Int_Factor ;
+rules Int_Factor ::= "(" Expr ")" 
+                   | "size" "(" ID Basic_Array_Dimensions ")" 
+                   | "float" "(" Expr ")" 
+                   | "floor"  "(" Expr ")" 
+                   | "ceil" "(" Expr ")" 
+                   | ID Modifier_List 
+                   | IVAL 
+                   | RVAL 
+                   | BVAL 
+                   | "-" Int_Factor ;
 
-rules Modifier_List ::= Fun_Argument_List 
-    | Array_Dimensions ;
-rules Fun_Argument_List ::= LPAR Arguments RPAR ;
-rules Cons_Argument_List ::= Fun_Argument_List 
-    | ;
+rules Modifier_List ::= "(" Arguments ")"
+                      | Array_Dimensions ;
+
 rules Arguments ::= Expr More_Arguments 
-    | ;
-rules More_Arguments ::= COMMA Expr More_Arguments 
-    | ;
+                  | ;
+rules More_Arguments ::= "," Expr More_Arguments 
+                       | ;
 
 comment "%" ;
 comment "/*" "*/" ;
 
-token ADD '+' ;
-token SUB '-' ;
-token MUL '*' ;
-token DIV '/' ;
-token ARROW {"=>"} ;
-
-token AND {"&&"} ;
-token OR {"||"} ;
-token NOT {"not"} ;
-
-token EQUAL '=' ;
-token MyLT '<' ;
-token MyGT '>' ;
-token LE {"=<"} ;
-token GE {">="} ;
-
-token ASSIGN {":="} ;
-
-token LPAR '(' ;
-token RPAR ')' ;
-token CLPAR '{' ;
-token CRPAR '}' ;
-token SLPAR '[' ;
-token SRPAR ']' ;
-token SLASH '|' ;
-
-token COLON ':' ;
-token SEMICOLON ';' ;
-token COMMA ',' ;
-
-token IF {"if"} ;
-token THEN {"then"} ;
-token WHILE {"while"} ;
-token DO {"do"} ;
-token READ {"read"} ;
-token ELSE {"else"} ;
-token BEGIN {"begin"} ;
-token END {"end"} ;
-token CASE {"case"} ;
-token OF {"of"} ;
-token PRINT {"print"} ;
-token INT {"int"} ;
-token BOOL {"bool"} ;
-token CHAR {"char"} ;
-token REAL {"real"} ;
-token VAR {"var"} ;
-token DATA {"data"} ;
-token SIZE {"size"} ;
-token FLOAT {"float"} ;
-token FLOOR {"floor"} ;
-token CEIL {"ceil"} ;
-token FUN {"fun"} ;
-token RETURN {"return"} ;
-
-token CID ('#' ('_'| letter | digit )*) ;
 token ID (letter ('_' | letter | digit )*) ;
 token IVAL digit+ ;
 token RVAL (digit+ '.' digit+) ;
 token BVAL ({"true"} | {"false"}) ;
-token CVAL (('"'{"\n"}'"') | ('"'{"\t"}'"') | ('"' (upper (letter | digit | '_')) '"')) ;
