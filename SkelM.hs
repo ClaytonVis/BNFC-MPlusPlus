@@ -9,19 +9,20 @@ type Result = Err String
 failure :: Show a => a -> Result
 failure x = Bad $ "Undefined case: " ++ show x
 
-transID :: ID -> Result
+transID :: ID -> String
 transID x = case x of
-  ID string -> failure x
-transIVAL :: IVAL -> Result
+  ID string -> String
+transIVAL :: IVAL -> Integer
 transIVAL x = case x of
-  IVAL string -> failure x
-transRVAL :: RVAL -> Result
+  IVAL string -> read string
+transRVAL :: RVAL -> Float
 transRVAL x = case x of
-  RVAL string -> failure x
-transBVAL :: BVAL -> Result
+  RVAL string -> read string
+transBVAL :: BVAL -> Bool
 transBVAL x = case x of
-  BVAL string -> failure x
-transProg :: Prog -> Result
+  BVAL "true" -> True
+  BVAL "false" -> False
+transProg :: Prog -> M_Prog
 transProg x = case x of
   ProgBlock block -> failure x
 transBlock :: Block -> Result
@@ -33,20 +34,20 @@ transDeclarations x = case x of
   Declarations2 -> failure x
 transDeclaration :: Declaration -> Result
 transDeclaration x = case x of
-  DeclarationVar_Declaration vardeclaration -> failure x
-  DeclarationFun_Declaration fundeclaration -> failure x
+  DeclarationVar_Declaration vardeclaration -> transVar_Declaration vardeclaration
+  DeclarationFun_Declaration fundeclaration -> transFun_Declaration fundeclaration
 transVar_Declaration :: Var_Declaration -> Result
 transVar_Declaration x = case x of
-  Var_Declaration1 id arraydimensions type_ -> failure x
-transType :: Type -> Result
+  Var_Declaration1 id arraydimensions type_ -> M_var (transID id, transType type_)
+transType :: Type -> M_type
 transType x = case x of
-  Type_int -> failure x
-  Type_real -> failure x
-  Type_bool -> failure x
-transArray_Dimensions :: Array_Dimensions -> Result
+  Type_int -> M_int
+  Type_real -> M_real
+  Type_bool -> M_bool
+transArray_Dimensions :: Array_Dimensions -> [M_expr]
 transArray_Dimensions x = case x of
-  Array_Dimensions1 expr arraydimensions -> failure x
-  Array_Dimensions2 -> failure x
+  Array_Dimensions1 expr arraydimensions -> (transExpr expr) : (transArray_Dimensions arraydimensions)
+  Array_Dimensions2 -> []
 transFun_Declaration :: Fun_Declaration -> Result
 transFun_Declaration x = case x of
   Fun_Declaration1 id paramlist type_ funblock -> failure x
