@@ -1,0 +1,214 @@
+P1. Program ::= Block ;
+
+P2. Block ::= Declarations Program_Body ;
+
+P3. Declarations ::= Declaration SEMICOLON Declarations ;
+P4. Declarations ::=  ;
+
+P5. Declaration ::= Var_Declaration ;
+P6. Declaration ::= Fun_Declaration ;
+P7. Declaration ::= Data_Declaration ;
+
+P8. Var_Declaration ::= VAR Var_Specs COLON Type ;
+
+P9. Var_Specs ::= Var_Spec More_Var_Specs;
+
+P10. More_Var_Specs ::= COMMA Var_Spec More_Var_Specs ;
+P11. More_Var_Specs ::= ;
+
+P12. Var_Spec ::= ID Array_Dimensions ;
+
+P13. Array_Dimensions ::= SLPAR Expr SRPAR Array_Dimensions ;
+P14. Array_Dimensions ::= ;
+
+P15. Type ::= INT ;
+P16. Type ::= REAL ;
+P17. Type ::= BOOL ;
+P18. Type ::= CHAR ;
+P19. Type ::= ID ;
+
+P20. Fun_Declaration ::= FUN ID Param_List COLON Type CLPAR Fun_Block CRPAR ;
+
+P21. Fun_Block ::= Declarations Fun_Body ;
+
+P22. Param_List ::= LPAR Parameters RPAR ;
+
+P23. Parameters ::= Basic_Declaration More_Parameters ;
+P24. Parameters ::= ;
+
+P25. More_Parameters ::= COMMA Basic_Declaration More_Parameters ;
+P26. More_Parameters ::= ;
+
+P27. Basic_Declaration ::= ID Basic_Array_Dimensions COLON Type ;
+
+P28. Basic_Array_Dimensions ::= SLPAR SRPAR Basic_Array_Dimensions ;
+P29. Basic_Array_Dimensions ::= ;
+
+P30. Data_Declaration ::= DATA ID EQUAL Cons_Declarations ;
+
+P31. Cons_Declarations ::= Cons_Decl More_Cons_Decl ;
+
+P32. More_Cons_Decl ::= SLASH Cons_Decl More_Cons_Decl ;
+P33. More_Cons_Decl ::= ;
+
+P34. Cons_Decl ::= CID OF Type_List ;
+P35. Cons_Decl ::= CID ;
+
+P36. Type_List ::= Type More_Type ;
+
+P37. More_Type ::= MUL Type More_Type;
+P38. More_Type ::= ;
+
+P39. Program_Body ::= BEGIN Prog_Stmts END ;
+P40. Program_Body ::= Prog_Stmts ;
+
+P41. Fun_Body ::= BEGIN Prog_Stmts RETURN Expr SEMICOLON END ;
+P42. Fun_Body ::= Prog_Stmts RETURN Expr SEMICOLON ;
+
+P43. Prog_Stmts ::= Prog_Stmt SEMICOLON Prog_Stmts ;
+P44. Prog_Stmts ::= ;
+
+P45. Prog_Stmt ::= IF Expr THEN Prog_Stmt ELSE Prog_Stmt ;
+P46. Prog_Stmt ::= WHILE Expr DO Prog_Stmt ;
+P47. Prog_Stmt ::= READ Location ;
+P48. Prog_Stmt ::= Location ASSIGN Expr ;
+P49. Prog_Stmt ::= PRINT Expr ;
+P50. Prog_Stmt ::= CLPAR Block CRPAR ;
+P51. Prog_Stmt ::= CASE Expr OF CLPAR Case_List CRPAR ;
+
+P52. Location ::= ID Array_Dimensions ;
+
+P53. Case_List ::= Case More_Case ;
+
+P54. More_Case ::= SLASH Case More_Case ;
+P55. More_Case ::= ;
+
+P56. Case ::= CID Var_List ARROW Prog_Stmt ;
+
+P57. Var_List ::= LPAR Var_List' RPAR ;
+P58. Var_List ::= ;
+
+P59. Var_List' ::= ID More_Var_List' ;
+
+P60. More_Var_List' ::= COMMA ID More_Var_List' ;
+P61. More_Var_List' ::= ;
+
+P62. Expr ::= Expr OR BInt_Term ;
+P63. Expr ::= BInt_Term ;
+
+P64. BInt_Term ::= BInt_Term AND BInt_Factor ;
+P65. BInt_Term ::= BInt_Factor ;
+
+P66. BInt_Factor ::= NOT BInt_Factor ;
+P67. BInt_Factor ::= Int_Expr Compare_Op Int_Expr ;
+P68. BInt_Factor ::= Int_Expr ;
+
+P69. Compare_Op ::= EQUAL ;
+P70. Compare_Op ::= LT ;
+P71. Compare_Op ::= GT ;
+P72. Compare_Op ::= LE ;
+P73. Compare_Op ::= GT ;
+
+P74. Int_Expr ::= Int_Expr Addop Int_Term ;
+P75. Int_Expr ::= Int_Term ;
+
+P76. Addop ::= ADD ;
+P77. Addop ::= SUB ;
+
+P78. Int_Term ::= Int_Term Mulop Int_Factor ;
+P79. Int_Term ::= Int_Factor ;
+
+P80. Mulop ::= MUL ;
+P81. Mulop ::= DIV ;
+
+P82. Int_Factor ::= LPAR Expr RPAR ;
+P83. Int_Factor ::= SIZE LPAR ID Basic_Array_Dimensions RPAR ;
+P84. Int_Factor ::= FLOAT LPAR Expr RPAR ;
+P85. Int_Factor ::= FLOOR LPAR Expr RPAR ;
+P86. Int_Factor ::= CEIL LPAR Expr RPAR ;
+P87. Int_Factor ::= ID Modifier_List ;
+P88. Int_Factor ::= CID Cons_Argument_List ;
+P89. Int_Factor ::= IVAL ;
+P90. Int_Factor ::= RVAL ;
+P91. Int_Factor ::= BVAL ;
+P92. Int_Factor ::= CVAL ;
+P93. Int_Factor ::= SUB Int_Factor ;
+
+P94. Modifier_List ::= Fun_Argument_List ;
+P95. Modifier_List ::= Array_Dimensions ;
+
+P96. Fun_Argument_List ::= LPAR Arguments RPAR ;
+
+P97. Cons_Argument_List ::= Fun_Argument_List ;
+P98. Cons_Argument_List ::= ;
+
+P99.  Arguments ::= Expr More_Arguments ;
+P100. Arguments ::= ;
+
+P101. More_Arguments ::= COMMA Expr More_Arguments ;
+P102. More_Arguments ::= ;
+
+
+comment "%" ;
+comment "/*" "*/" ;
+
+token ADD '+' ;
+token SUB '-' ;
+token MUL '*' ;
+token DIV '/' ;
+token ARROW {"=>"} ;
+
+token AND {"&&"} ;
+token OR {"||"} ;
+token NOT {"not"} ;
+
+token EQUAL '=' ;
+token LT '<' ;
+token GT '>' ;
+token LE {"=<"} ;
+token GE {">="} ;
+
+token ASSIGN {":="} ;
+
+token LPAR '(' ;
+token RPAR ')' ;
+token CLPAR '{' ;
+token CRPAR '}' ;
+token SLPAR '[' ;
+token SRPAR ']' ;
+token SLASH '|' ;
+
+token COLON ':' ;
+token SEMICOLON ';' ;
+token COMMA ',' ;
+
+token IF {"if"} ;
+token THEN {"then"} ;
+token WHILE {"while"} ;
+token DO {"do"} ;
+token READ {"read"} ;
+token ELSE {"else"} ;
+token BEGIN {"begin"} ;
+token END {"end"} ;
+token CASE {"case"} ;
+token OF {"of"} ;
+token PRINT {"print"} ;
+token INT {"int"} ;
+token BOOL {"bool"} ;
+token CHAR {"char"} ;
+token REAL {"real"} ;
+token VAR {"var"} ;
+token DATA {"data"} ;
+token SIZE {"size"} ;
+token FLOAT {"float"} ;
+token FLOOR {"floor"} ;
+token CEIL {"ceil"} ;
+token FUN {"fun"} ;
+token RETURN {"return"} ;
+
+token CID ('#' ('_'| letter | digit )*) ;
+token ID (letter ('_' | letter | digit )*) ;
+token IVAL digit+ ;
+token RVAL (digit+ '.' digit+) ;
+token BVAL ({"true"} | {"false"}) ;
+token CVAL (('"'{"\n"}'"') | ('"'{"\t"}'"') | ('"' (upper (letter | digit | '_')) '"')) ;
