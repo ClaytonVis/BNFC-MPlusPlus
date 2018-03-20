@@ -1,6 +1,6 @@
 module AST where
 {-
-The AST was laid out by Dr. Cockett in his documentation for the M++ specs
+The AST was laid out by Dr. Cockett in his documentation for the M+ specs
 -}
 
 data M_prog = M_prog ([M_decl],[M_stmt])

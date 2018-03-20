@@ -12,76 +12,97 @@ failure x = Bad $ "Undefined case: " ++ show x
 transID :: ID -> String
 transID x = case x of
   ID string -> String
+
 transIVAL :: IVAL -> Integer
 transIVAL x = case x of
   IVAL string -> read string
+
 transRVAL :: RVAL -> Float
 transRVAL x = case x of
   RVAL string -> read string
+
 transBVAL :: BVAL -> Bool
 transBVAL x = case x of
   BVAL "true" -> True
   BVAL "false" -> False
+
 transProg :: Prog -> M_Prog
 transProg x = case x of
-  ProgBlock block -> failure x
-transBlock :: Block -> Result
+  ProgBlock block -> M_prog $ transBlock block
+
+transBlock :: Block -> M_stmt
 transBlock x = case x of
-  Block1 declarations programbody -> failure x
-transDeclarations :: Declarations -> Result
+  Block1 declarations programbody -> M_block (transDeclarations declarations, transProgram_Body programbody)
+
+transDeclarations :: Declarations -> [M_decl]
 transDeclarations x = case x of
-  Declarations1 declaration declarations -> failure x
-  Declarations2 -> failure x
-transDeclaration :: Declaration -> Result
+  Declarations1 declaration declarations -> (transDeclaration declaration) : (transDeclarations declarations)
+  Declarations2 -> []
+
+transDeclaration :: Declaration -> M_decl
 transDeclaration x = case x of
   DeclarationVar_Declaration vardeclaration -> transVar_Declaration vardeclaration
   DeclarationFun_Declaration fundeclaration -> transFun_Declaration fundeclaration
-transVar_Declaration :: Var_Declaration -> Result
+
+transVar_Declaration :: Var_Declaration -> M_decl
 transVar_Declaration x = case x of
-  Var_Declaration1 id arraydimensions type_ -> M_var (transID id, transType type_)
+  Var_Declaration1 id arraydimensions type_ -> M_var (transID id, transArray_Dimensions arraydimensions, transType type_)
+
 transType :: Type -> M_type
 transType x = case x of
   Type_int -> M_int
   Type_real -> M_real
   Type_bool -> M_bool
+
 transArray_Dimensions :: Array_Dimensions -> [M_expr]
 transArray_Dimensions x = case x of
   Array_Dimensions1 expr arraydimensions -> (transExpr expr) : (transArray_Dimensions arraydimensions)
   Array_Dimensions2 -> []
-transFun_Declaration :: Fun_Declaration -> Result
+
+transFun_Declaration :: Fun_Declaration -> M_decl
 transFun_Declaration x = case x of
-  Fun_Declaration1 id paramlist type_ funblock -> failure x
-transFun_Block :: Fun_Block -> Result
+  Fun_Declaration1 id paramlist type_ funblock -> (\(d, s) -> M_fun (transID id, transParam_List paramlist, transType type_, d, s)) $ transFun_Block funblock
+
+transFun_Block :: Fun_Block -> M_fun ([M_decl],[M_stmt])
 transFun_Block x = case x of
-  Fun_Block1 declarations funbody -> failure x
-transParam_List :: Param_List -> Result
+  Fun_Block1 declarations funbody -> (transDeclarations declarations, transFun_Body funbody)
+
+transParam_List :: Param_List -> 
 transParam_List x = case x of
   Param_List1 parameters -> failure x
+
 transParameters :: Parameters -> Result
 transParameters x = case x of
   Parameters1 basicdeclaration moreparameters -> failure x
   Parameters2 -> failure x
+
 transMore_Parameters :: More_Parameters -> Result
 transMore_Parameters x = case x of
   More_Parameters1 basicdeclaration moreparameters -> failure x
   More_Parameters2 -> failure x
+
 transBasic_Declaration :: Basic_Declaration -> Result
 transBasic_Declaration x = case x of
   Basic_Declaration1 id basicarraydimensions type_ -> failure x
+
 transBasic_Array_Dimensions :: Basic_Array_Dimensions -> Result
 transBasic_Array_Dimensions x = case x of
   Basic_Array_Dimensions1 basicarraydimensions -> failure x
   Basic_Array_Dimensions2 -> failure x
+
 transProgram_Body :: Program_Body -> Result
 transProgram_Body x = case x of
   Program_Body1 progstmts -> failure x
+
 transFun_Body :: Fun_Body -> Result
 transFun_Body x = case x of
   Fun_Body1 progstmts expr -> failure x
+
 transProg_Stmts :: Prog_Stmts -> Result
 transProg_Stmts x = case x of
   Prog_Stmts1 progstmt progstmts -> failure x
   Prog_Stmts2 -> failure x
+
 transProg_Stmt :: Prog_Stmt -> Result
 transProg_Stmt x = case x of
   Prog_Stmt1 expr progstmt1 progstmt2 -> failure x
@@ -90,45 +111,55 @@ transProg_Stmt x = case x of
   Prog_Stmt4 identifier expr -> failure x
   Prog_Stmt5 expr -> failure x
   Prog_Stmt6 block -> failure x
+
 transIdentifier :: Identifier -> Result
 transIdentifier x = case x of
   Identifier1 id arraydimensions -> failure x
+
 transExpr :: Expr -> Result
 transExpr x = case x of
   Expr1 expr bintterm -> failure x
   ExprBInt_Term bintterm -> failure x
+
 transBInt_Term :: BInt_Term -> Result
 transBInt_Term x = case x of
   BInt_Term1 bintterm bintfactor -> failure x
   BInt_TermBInt_Factor bintfactor -> failure x
+
 transBInt_Factor :: BInt_Factor -> Result
 transBInt_Factor x = case x of
   BInt_Factor1 bintfactor -> failure x
   BInt_Factor2 intexpr1 compareop intexpr2 -> failure x
   BInt_FactorInt_Expr intexpr -> failure x
-transCompare_Op :: Compare_Op -> Result
+
+transCompare_Op :: Compare_Op -> M_operation
 transCompare_Op x = case x of
-  Compare_Op1 -> failure x
-  Compare_Op2 -> failure x
-  Compare_Op3 -> failure x
-  Compare_Op4 -> failure x
-  Compare_Op5 -> failure x
+  Compare_Op1 -> M_eq
+  Compare_Op2 -> M_lt
+  Compare_Op3 -> M_gt
+  Compare_Op4 -> M_le
+  Compare_Op5 -> M_ge
+
 transInt_Expr :: Int_Expr -> Result
 transInt_Expr x = case x of
   Int_Expr1 intexpr addop intterm -> failure x
   Int_ExprInt_Term intterm -> failure x
-transAddop :: Addop -> Result
+
+transAddop :: Addop -> M_operation
 transAddop x = case x of
-  Addop1 -> failure x
-  Addop2 -> failure x
+  Addop1 -> M_add
+  Addop2 -> M_sub
+
 transInt_Term :: Int_Term -> Result
 transInt_Term x = case x of
   Int_Term1 intterm mulop intfactor -> failure x
   Int_TermInt_Factor intfactor -> failure x
-transMulop :: Mulop -> Result
+
+transMulop :: Mulop -> M_operation
 transMulop x = case x of
-  Mulop1 -> failure x
-  Mulop2 -> failure x
+  Mulop1 -> M_mul
+  Mulop2 -> M_div
+
 transInt_Factor :: Int_Factor -> Result
 transInt_Factor x = case x of
   Int_Factor1 expr -> failure x
@@ -141,14 +172,17 @@ transInt_Factor x = case x of
   Int_FactorRVAL rval -> failure x
   Int_FactorBVAL bval -> failure x
   Int_Factor7 intfactor -> failure x
+
 transModifier_List :: Modifier_List -> Result
 transModifier_List x = case x of
   Modifier_List1 arguments -> failure x
   Modifier_ListArray_Dimensions arraydimensions -> failure x
+
 transArguments :: Arguments -> Result
 transArguments x = case x of
   Arguments1 expr morearguments -> failure x
   Arguments2 -> failure x
+
 transMore_Arguments :: More_Arguments -> Result
 transMore_Arguments x = case x of
   More_Arguments1 expr morearguments -> failure x
