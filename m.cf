@@ -3,7 +3,7 @@ rules Prog ::= Block ;
 rules Block ::= Declarations Program_Body ;
 
 rules Declarations ::= Declaration ";" Declarations
-                     |;
+                     | ;
 
 rules Declaration ::= Var_Declaration
                     | Fun_Declaration ;
