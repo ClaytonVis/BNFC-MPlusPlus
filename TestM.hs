@@ -5,13 +5,13 @@ module Main where
 import System.IO ( stdin, hGetContents )
 import System.Environment ( getArgs, getProgName )
 import System.Exit ( exitFailure, exitSuccess )
-import Control.Monad (when)
 
 import LexM
 import ParM
 import SkelM
 import PrintM
 import AbsM
+import AST
 
 
 
@@ -25,7 +25,7 @@ myLLexer = myLexer
 type Verbosity = Int
 
 putStrV :: Verbosity -> String -> IO ()
-putStrV v s = when (v > 1) $ putStrLn s
+putStrV v s = if v > 1 then putStrLn s else return ()
 
 runFile :: (Print a, Show a) => Verbosity -> ParseFun a -> FilePath -> IO ()
 runFile v p f = putStrLn f >> readFile f >>= run v p
@@ -38,7 +38,8 @@ run v p s = let ts = myLLexer s in case p ts of
                           putStrLn s
                           exitFailure
            Ok  tree -> do putStrLn "\nParse Successful!"
-                          showTree v tree
+			  let astTree = tree
+                          showTree v astTree
 
                           exitSuccess
 
@@ -63,13 +64,14 @@ usage = do
 main :: IO ()
 main = do
   args <- getArgs
-  case args of
-    ["--help"] -> usage
-    [] -> getContents >>= run 2 pProg
-    "-s":fs -> mapM_ (runFile 0 pProg) fs
-    fs -> mapM_ (runFile 2 pProg) fs
-
-
+  conts <- readFile (args !! 0)
+  let toks = myLexer conts
+  let parse = pProg toks
+  case parse of
+    Ok tree -> do
+      let astTr = transProg tree
+      putStrLn $ ppProg astTr
+    Bad msg -> putStrLn msg
 
 
 

@@ -4,6 +4,7 @@ module SkelM where
 
 import AbsM
 import ErrM
+import AST
 type Result = Err String
 
 --failure :: Show a => a -> Result
@@ -26,9 +27,11 @@ transBVAL x = case x of
   BVAL "true" -> True
   BVAL "false" -> False
 
-transProg :: Prog -> M_Prog
+transProg :: Prog -> M_prog
 transProg x = case x of
-  ProgBlock block -> ((M_block (ds, ss)) -> M_prog (ds, ss)) $ transBlock block
+  ProgBlock block -> M_prog (ds, ss)
+    where
+      M_block (ds, ss) = transBlock block
 
 transBlock :: Block -> M_stmt
 transBlock x = case x of
@@ -56,12 +59,14 @@ transType x = case x of
 
 transArray_Dimensions :: Array_Dimensions -> [M_expr]
 transArray_Dimensions x = case x of
-  Array_Dimensions1 expr arraydimensions -> (transExpr expr) : [transArray_Dimensions arraydimensions]
+  Array_Dimensions1 expr arraydimensions -> (transExpr expr) : (transArray_Dimensions arraydimensions)
   Array_Dimensions2 -> []
 
 transFun_Declaration :: Fun_Declaration -> M_decl
 transFun_Declaration x = case x of
-  Fun_Declaration1 id paramlist type_ funblock -> (\(d, s) -> M_fun (transID id, transParam_List paramlist, transType type_, d, s)) $ transFun_Block funblock
+  Fun_Declaration1 id paramlist type_ funblock -> M_fun (transID id, transParam_List paramlist, transType type_, d, s)
+    where
+      M_block (d, s) = transFun_Block funblock
 
 transFun_Block :: Fun_Block -> M_stmt
 transFun_Block x = case x of
@@ -87,7 +92,7 @@ transBasic_Declaration x = case x of
 
 transBasic_Array_Dimensions :: Basic_Array_Dimensions -> Int
 transBasic_Array_Dimensions x = case x of
-  Basic_Array_Dimensions1 basicarraydimensions -> transBasic_Array_Dimensions basicarraydimensions $ + 1
+  Basic_Array_Dimensions1 basicarraydimensions -> (transBasic_Array_Dimensions basicarraydimensions) + 1
   Basic_Array_Dimensions2 -> 0
 
 transProgram_Body :: Program_Body -> [M_stmt]
@@ -100,15 +105,17 @@ transFun_Body x = case x of
 
 transProg_Stmts :: Prog_Stmts -> [M_stmt]
 transProg_Stmts x = case x of
-  Prog_Stmts1 progstmt progstmts -> (transProg_Stmt) : (transProg_Stmts progstmts)
+  Prog_Stmts1 progstmt progstmts -> (transProg_Stmt progstmt) : (transProg_Stmts progstmts)
   Prog_Stmts2 -> []
 
 transProg_Stmt :: Prog_Stmt -> M_stmt
 transProg_Stmt x = case x of
-  Prog_Stmt1 expr progstmt1 progstmt2 -> M_cond (transExpr expr, transProg_Stmt progstmt1, transProg_stmt progstmt2)
+  Prog_Stmt1 expr progstmt1 progstmt2 -> M_cond (transExpr expr, transProg_Stmt progstmt1, transProg_Stmt progstmt2)
   Prog_Stmt2 expr progstmt -> M_while (transExpr expr, transProg_Stmt progstmt)
   Prog_Stmt3 identifier -> M_read $ transIdentifier identifier
-  Prog_Stmt4 identifier expr -> ((v, exps) -> M_ass (v, exps, transExpr expr)) $ transIdentifier identifier
+  Prog_Stmt4 identifier expr -> M_ass (v, exps, transExpr expr)
+    where
+      (v, exps) = transIdentifier identifier
   Prog_Stmt5 expr -> M_print $ transExpr expr
   Prog_Stmt6 block -> transBlock block
 
@@ -123,7 +130,7 @@ transExpr x = case x of
 
 transBInt_Term :: BInt_Term -> M_expr
 transBInt_Term x = case x of
-  BInt_Term1 bintterm bintfactor -> M_app (M_and, (transBInt_Term bintterm) : [transBInt_Factor])
+  BInt_Term1 bintterm bintfactor -> M_app (M_and, (transBInt_Term bintterm) : [transBInt_Factor bintfactor])
   BInt_TermBInt_Factor bintfactor -> transBInt_Factor bintfactor
 
 transBInt_Factor :: BInt_Factor -> M_expr
@@ -143,7 +150,7 @@ transCompare_Op x = case x of
 transInt_Expr :: Int_Expr -> M_expr
 transInt_Expr x = case x of
   Int_Expr1 intexpr addop intterm -> M_app (transAddop addop, (transInt_Expr intexpr) : [transInt_Term intterm])
-  Int_ExprInt_Term intterm -> TransInt_Term intterm
+  Int_ExprInt_Term intterm -> transInt_Term intterm
 
 transAddop :: Addop -> M_operation
 transAddop x = case x of
@@ -152,7 +159,7 @@ transAddop x = case x of
 
 transInt_Term :: Int_Term -> M_expr
 transInt_Term x = case x of
-  Int_Term1 intterm mulop intfactor -> M_app (transMulop mulop, (transInt_Term) : [transInt_Factor])
+  Int_Term1 intterm mulop intfactor -> M_app (transMulop mulop, (transInt_Term intterm) : [transInt_Factor intfactor])
   Int_TermInt_Factor intfactor -> transInt_Factor intfactor
 
 transMulop :: Mulop -> M_operation
@@ -167,11 +174,11 @@ transInt_Factor x = case x of
   Int_Factor3 expr -> M_app (M_float, [transExpr expr])
   Int_Factor4 expr -> M_app (M_floor, [transExpr expr])
   Int_Factor5 expr -> M_app (M_ceil, [transExpr expr])
-  Int_Factor6 id modifierlist -> M_id (transId id, transModifier_List modifierlist)
-  Int_FactorIVAL ival -> transIVAL ival
-  Int_FactorRVAL rval -> transRVAL rval
-  Int_FactorBVAL bval -> transBVAL bval
-  Int_Factor7 intfactor -> M_app (M_sub, transInt_Factor intfactor)
+  Int_Factor6 id modifierlist -> M_id (transID id, transModifier_List modifierlist)
+  Int_FactorIVAL ival -> M_ival $ transIVAL ival
+  Int_FactorRVAL rval -> M_rval $ transRVAL rval
+  Int_FactorBVAL bval -> M_bval $ transBVAL bval
+  Int_Factor7 intfactor -> M_app (M_sub, [transInt_Factor intfactor])
 
 transModifier_List :: Modifier_List -> [M_expr]
 transModifier_List x = case x of
